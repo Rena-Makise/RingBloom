@@ -4,6 +4,6 @@
 RingBloom에 대한 소스코드를 모두 업로드하는 공간입니다.
 
 ## 개발노트
-[위키로 이동하기...](https://github.com/eurobin4321/parallel_diary/wiki)
+[위키로 이동하기...](https://github.com/Rena-Makise/RingBloom/wiki)
 개발노트는 다음에서 볼 수 있습니다.
 
