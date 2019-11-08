@@ -3,11 +3,14 @@
  * 컨트롤러는 클라이언트의 요청을 받아서 해당 요청을 수행하는데 필요한 비즈니스 로직을 호출하고 그 결과를 포함하여 응답해주는 디스패처 역할을 담당
  * ver 0.1 : 초기 구성 - 이 창 재
  * ver 0.3 : 게시판 CRUD 구현
+ * ver 0.4 : Logback 추가
  */
 package ringbloom.ringbloom.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +22,8 @@ import ringbloom.ringbloom.service.BoardService;
 
 @Controller
 public class BoardController {
-
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	// 비즈니스 로직을 처리하는 서비스 빈 연결
 	@Autowired
 	private BoardService boardService;
@@ -27,6 +31,7 @@ public class BoardController {
 	// 게시판 리스트
 	@RequestMapping("/board/openBoardList.do")
 	public ModelAndView openBoardList() throws Exception {
+		log.debug("openBoardList");
 		ModelAndView mv = new ModelAndView("/board/boardList");
 		
 		List<BoardDto> list = boardService.selectBoardList();
