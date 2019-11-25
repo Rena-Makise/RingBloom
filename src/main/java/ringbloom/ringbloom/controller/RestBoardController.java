@@ -21,10 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import ringbloom.ringbloom.dto.BoardDto;
 import ringbloom.ringbloom.dto.BoardFileDto;
 import ringbloom.ringbloom.service.BoardService;
 
+@Api(description = "게시판 REST")
 @Controller
 public class RestBoardController {
 	
@@ -32,7 +35,7 @@ public class RestBoardController {
 	@Autowired
 	private BoardService boardService;
 	
-	// 게시판 리스트
+	@ApiOperation(value = "게시판 리스트 조회")
 	@RequestMapping(value = "/board", method = RequestMethod.GET)
 	public ModelAndView openBoardList() throws Exception {
 		ModelAndView mv = new ModelAndView("/board/restBoardList");
@@ -43,20 +46,20 @@ public class RestBoardController {
 		return mv;
 	}
 	
-	// 게시글 작성 화면 호출
+	@ApiOperation(value = "게시글 작성 화면")
 	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
 	public String openBoardWrite() throws Exception {
 		return "/board/restBoardWrite";
 	}
 	
-	// 게시글 등록
+	@ApiOperation(value = "게시글 등록")
 	@RequestMapping(value = "/board/write", method = RequestMethod.POST)
 	public String insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
 		boardService.insertBoard(board, multipartHttpServletRequest);
 		return "redirect:/board";
 	}
 	
-	// 게시글 상세 화면 출력
+	@ApiOperation(value = "게시글 상세 화면")
 	@RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.GET)
 	public ModelAndView openBoardDetail(@PathVariable("boardIdx") int boardIdx) throws Exception {
 		ModelAndView mv = new ModelAndView("/board/restBoardDetail");
@@ -67,21 +70,21 @@ public class RestBoardController {
 		return mv;
 	}
 	
-	// 게시글 수정
+	@ApiOperation(value = "게시글 수정")
 	@RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.PUT)
 	public String updateBoard(BoardDto board) throws Exception {
 		boardService.updateBoard(board);
 		return "redirect:/board";
 	}
 	
-	// 게시글 삭제
+	@ApiOperation(value = "게시글 삭제")
 	@RequestMapping(value = "/board/{boardIdx}", method = RequestMethod.DELETE)
 	public String deleteBoard(@PathVariable("boardIdx") int boardIdx) throws Exception {
 		boardService.deleteBoard(boardIdx);
 		return "redirect:/board";
 	}
 	
-	// 첨부파일 정보 출력
+	@ApiOperation(value = "첨부파일 정보 출력")
 	@RequestMapping(value = "/board/file", method = RequestMethod.GET)
 	public void downloadBoardFile(@RequestParam int idx, @RequestParam int boardIdx, HttpServletResponse response) throws Exception {
 		BoardFileDto boardFile = boardService.selectBoardFileInformation(idx, boardIdx);

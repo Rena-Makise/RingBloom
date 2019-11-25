@@ -13,42 +13,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import ringbloom.ringbloom.dto.BoardDto;
 import ringbloom.ringbloom.service.BoardService;
 
+@Api(description = "게시판 REST API")
 @RestController
 public class RestBoardApiController {
 	@Autowired
 	private BoardService boardService;
 	
-	// 게시판 리스트
+	@ApiOperation(value = "게시판 리스트 조회")
 	@RequestMapping(value = "/api/board", method = RequestMethod.GET)
 	public List<BoardDto> openBoardList() throws Exception {
 		return boardService.selectBoardList();
 	}
 	
-	// 게시글 등록
+	@ApiOperation(value = "게시글 등록")
 	@RequestMapping(value = "/api/board/write", method = RequestMethod.POST)
 	public void insertBoard(@RequestBody BoardDto board) throws Exception {
 		boardService.insertBoard(board, null);
 	}
 	
-	// 게시글 상세 화면 출력
+	@ApiOperation(value = "게시글 상세 화면 조회")
 	@RequestMapping(value = "/api/board/{boardIdx}", method = RequestMethod.GET)
-	public BoardDto openBoardDetail(@PathVariable("boardIdx") int boardIdx) throws Exception {
+	public BoardDto openBoardDetail(@PathVariable("boardIdx") @ApiParam(value = "게시글 번호") int boardIdx) throws Exception {
 		return boardService.selectBoardDetail(boardIdx);
 	}
 	
-	// 게시글 수정
+	@ApiOperation(value = "게시글 수정")
 	@RequestMapping(value = "/api/board/{boardIdx}", method = RequestMethod.PUT)
 	public String updateBoard(@RequestBody BoardDto board) throws Exception {
 		boardService.updateBoard(board);
 		return "redirect:/board";
 	}
 	
-	// 게시글 삭제
+	@ApiOperation(value = "게시글 삭제")
 	@RequestMapping(value = "/api/board/{boardIdx}", method = RequestMethod.DELETE)
-	public String deleteBoard(@PathVariable("boardIdx") int boardIdx) throws Exception {
+	public String deleteBoard(@PathVariable("boardIdx") @ApiParam(value = "게시글 번호") int boardIdx) throws Exception {
 		boardService.deleteBoard(boardIdx);
 		return "redirect:/board";
 	}

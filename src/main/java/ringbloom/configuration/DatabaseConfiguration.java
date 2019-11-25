@@ -1,7 +1,7 @@
 /* DatabaseConfiguration.java
  * Description : 데이터베이스 설정
  * ver 0.1 : 초기 구성 - 이 창 재
- * ver 0.2 : 마이바티스 연동
+ * ver 0.2 : 마이바티스 연동 - 이 창 재
  */
 package ringbloom.configuration;
 import javax.sql.DataSource;

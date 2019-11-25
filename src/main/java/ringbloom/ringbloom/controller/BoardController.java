@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import io.swagger.annotations.Api;
 import ringbloom.ringbloom.dto.BoardDto;
 import ringbloom.ringbloom.dto.BoardFileDto;
 import ringbloom.ringbloom.service.BoardService;
 
+@Api(description = "사용안함")
 @Controller
 public class BoardController {
 	private Logger log = LoggerFactory.getLogger(this.getClass());

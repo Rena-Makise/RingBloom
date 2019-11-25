@@ -1,3 +1,8 @@
+/* WebMvcConfiguration.java
+ * Description : Web MVC 관련 설정
+ * ver 0.1 : 초기 구성 - 이 창 재
+ * ver 0.2 : 파일 처리 설정 - 이 창 재
+ */
 package ringbloom.configuration;
 
 import org.springframework.context.annotation.Bean;
@@ -6,14 +11,14 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import ringbloom.interceptor.LoggerInterceptor;
+import ringbloom.interceptor.UserInterceptor;
 
 @Configuration
 public class WebMvcConfiguration implements WebMvcConfigurer {
 	// 인터셉터 등록
 	@Override
 	public void addInterceptors(InterceptorRegistry registry){
-		registry.addInterceptor(new LoggerInterceptor());
+		registry.addInterceptor(new UserInterceptor());
 	}
 	
 	// 파일 처리를 위한 빈 설정
