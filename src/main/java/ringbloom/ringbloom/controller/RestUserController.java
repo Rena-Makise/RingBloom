@@ -43,6 +43,8 @@ public class RestUserController {
 			out.println("<script>alert('이미 로그인된 상태입니다.'); window.location.href='/';</script>");
 			out.flush();
 		}
+		mv.addObject("nickname", "Guest");
+		mv.addObject("email", "");
 		return mv;
 	}
 	
@@ -85,6 +87,8 @@ public class RestUserController {
 			out.println("<script>alert('이미 로그인된 상태입니다.'); window.location.href='/';</script>");
 			out.flush();
 		}
+		mv.addObject("nickname", "Guest");
+		mv.addObject("email", "");
 		return mv;
 	}
 	

@@ -57,10 +57,13 @@
 	      <a href="#user"><img class=""></a>
 	      <a href="#name">
 	      	<span class="white-text name" th:text="${nickname}"></span>
-      	</a>
-	      <a href="#email"><span class="white-text email" th:text="${email}"></span></a>
+      	  </a>
+	      <a href="#email">
+	      	<span class="white-text email" th:text="${email}"></span>
+	      </a>
 	    </div></li>
 	    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+   	    <li><a href="#" id="loginBtn">Login</a></li>
 	    <li><a href="#" id="logoutBtn">Logout</a></li>
 	    <li><div class="divider"></div></li>
 	    <li><a class="subheader">Subheader</a></li>
@@ -201,12 +204,19 @@
 	
   <script type="text/javascript">
 	  $(document).ready(function() {
+		  $("#loginBtn").unbind("click").click(function(e) {
+			  e.preventDefault();
+    	  	  fn_login();
+		  });
 		  $("#logoutBtn").unbind("click").click(function(e) {
 			  e.preventDefault();
     	  	  fn_logout();
 		  });
 	  });
 	  
+	  function fn_login() {
+		  window.location.href="/user/login";
+	  }
 	  function fn_logout() {
 		  window.location.href="/user/logout";
 	  }

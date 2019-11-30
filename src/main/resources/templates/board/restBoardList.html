@@ -55,8 +55,12 @@
 	          <img src="../images/office.jpg">
 	        </div>
 	        <a href="#user"><img class=""></a>
-	        <a href="#name"><span class="white-text name">Rena Makise</span></a>
-	        <a href="#email"><span class="white-text email">rena@admin.com</span></a>
+	        <a href="#name">
+	      	  <span class="white-text name" th:text="${nickname}"></span>
+      	    </a>
+	        <a href="#email">
+	      	  <span class="white-text email" th:text="${email}"></span>
+	        </a>
 	      </div></li>
 	      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
 	      <li><a href="#!">Second Link</a></li>
@@ -69,10 +73,21 @@
     </nav>
     <div class="container">
     	<h2>게시글 목록</h2>
+    	<div><p th:text="|${count}개의 게시물이 있습니다.|"></p></div>
+    	<div>
+    		<select name="searchType" id="select_searchType">
+    			<option id="title" value="TITLE">제목</option>
+    			<option id="nickname" value="NICKNAME">글쓴이</option>
+    		</select>
+    		<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}" onkeyup="enterkey();">
+			<input type="hidden" id="searchTypeHidden" name="searchTypeHidden" th:value="${searchType}">
+    		<a href="javascript:fn_searchList()" class="btn">검색</a> 
+    	</div>
     	<table class="board_list">
 	        <colgroup>
 	            <col width="15%"/>
 	            <col width="*"/>
+	            <col width="15%"/>
 	            <col width="15%"/>
 	            <col width="20%"/>
 	        </colgroup>
@@ -81,6 +96,7 @@
 	                <th scope="col">글번호</th>
 	                <th scope="col">제목</th>
 	                <th scope="col">조회수</th>
+	                <th scope="col">작성자</th>
 	                <th scope="col">작성일</th>
 	            </tr>
 	        </thead>
@@ -88,15 +104,35 @@
 	        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
 	        		<td th:text="${list.boardIdx}"></td>
 	        		<!-- 여기 -->
-	        		<td class="title"><a href="/board/" th:attrappend="href=${list.boardIdx}" th:text="${list.title}"></a></td>
+	        		<td class="title"><a href="/board/" th:attrappend="href=${paging.curPage} + '/' + ${list.boardIdx} + '?searchType=' + ${searchType} + '&searchWord=' + ${searchWord}" th:text="${list.title}"></a><span th:text="'   [' + ${list.commentCnt} +']'"></span></td>
 	        		<td th:text="${list.hitCnt}"></td>
-	        		<td th:text="${#temporals.format(list.createdDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+	        		<td th:text="${list.creatorId}"></td>
+	        		<td th:text="${#temporals.format(list.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
 	        	</tr> 
 	        	<tr th:unless="${#lists.size(list)} > 0">
 	        		<td colspan="4">조회된 결과가 없습니다.</td>
 	        	</tr>
 	        </tbody>
 	    </table>
+	    <div style="text-align: center;">
+	    	<ul class="pagination" th:with="start=${paging.pageBegin}, end=${paging.pageEnd}">
+	    		<li th:class="${paging.curPage == 1} ? 'disabled' : 'waves-effect'">
+	    			<a th:href="${paging.curPage == 1} ? '#' : @{/board/1}"><i class="material-icons">first_page</i></a>
+	    		</li>
+	    		<li th:class="${paging.curBlock == 1} ? 'disabled' : 'waves-effect'">
+	    			<a th:href="${paging.curBlock == 1} ? '#' : @{'/board/' + ${paging.prevPage}}"><i class="material-icons">chevron_left</i></a>
+	    		</li>
+	    		<li th:each="page: ${#numbers.sequence(start, end)}" th:class="${page == paging.curPage} ? 'active' : 'waves-effect'">
+	    			<a href="/board/" th:attrappend="href=${page}" th:text="${page}"></a>
+	    		</li>
+	    		<li th:class="${paging.curBlock eq paging.totalBlock} ? 'disabled' : 'waves-effect'">
+	    			<a th:href="${paging.curBlock eq paging.totalBlock} ? '#' : @{'/board/' + ${paging.nextPage}}"><i class="material-icons">chevron_right</i></a>
+	    		</li>
+	    		<li th:class="${paging.curPage eq paging.totalPage} ? 'disabled' : 'waves-effect'">
+	    			<a th:href="${paging.curPage eq paging.totalPage} ? '#' : @{'/board/' + ${paging.totalPage}}"><i class="material-icons">last_page</i></a>
+	    		</li>
+	    	</ul>
+	    </div>
 	    <!-- 여기 -->
 	    <a href="/board/write" class="btn">글 쓰기</a>
     </div>
@@ -135,5 +171,31 @@
         </div>
       </div>
     </footer>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        	var searchTypeHidden = $("#searchTypeHidden").val();
+        	
+        	if(searchTypeHidden == "TITLE") {
+        		$("#title").attr("selected", "selected");
+        		$('select').formSelect();
+        	} else {
+        		$("#nickname").attr("selected", "selected");
+        		$('select').formSelect();
+        	}
+        });
+            
+    	function enterkey() {
+    		if(window.event.keyCode == 13) {
+    			fn_searchList();
+    		}
+    	}
+        
+    	function fn_searchList() {
+    		var searchType = $("#select_searchType option:selected").val();
+    		var searchWord = $("#searchWord").val();
+    		
+    		window.location.href="/board/1?searchType="+searchType+"&searchWord="+searchWord;
+    	}
+    </script>
 </body>
 </html>

@@ -2,18 +2,79 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="ringbloom.ringbloom.mapper.BoardMapper">
- 	<select id="selectBoardList" resultType="ringbloom.ringbloom.dto.BoardDto">
+	<select id="boardListGetCount" parameterType="map" resultType="int">
+		SELECT
+			COUNT(board_idx)
+		FROM
+			t_board
+		WHERE 
+			deleted_yn = 'N'
+		<choose>
+			<when test="searchType == 'TITLE'">
+				<if test="searchWord != null and searchWord != ''">
+					AND title LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
+			</when>
+			<when test="searchType == 'NICKNAME'">
+				<if test="searchWord != null and searchWord != ''">
+					AND creator_id LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
+			</when>
+		</choose>
+	</select>
+ 	<select id="selectBoardList" parameterType="map" resultType="ringbloom.ringbloom.dto.BoardDto">
 		<![CDATA[
 			SELECT
-				board_idx,
-				title,
-				hit_cnt,
-				created_datetime
+				B.RNUM,
+				B.board_idx,
+				B.title,
+				B.hit_cnt,
+				B.created_datetime,
+				B.creator_id,
+				B.comment_cnt
 			FROM
-				t_board
-			WHERE
-				deleted_yn = 'N'
-			ORDER BY board_idx DESC
+			(
+				SELECT
+					@ROWNUM := @ROWNUM + 1 AS RNUM,
+			        A.board_idx,
+					A.title,
+					A.hit_cnt,
+					A.created_datetime,
+					A.creator_id,
+					A.comment_cnt
+				FROM
+			    (
+					SELECT
+						board_idx,
+						title,
+						hit_cnt,
+						created_datetime,
+						creator_id,
+						(SELECT COUNT(*) FROM t_comment WHERE t_comment.board_idx = t_board.board_idx) AS comment_cnt
+					FROM 
+			        	t_board
+					WHERE
+						(@ROWNUM := 0) = 0
+						AND deleted_yn = 'N'
+		]]>
+		<choose>
+			<when test="searchType == 'TITLE'">
+				<if test="searchWord != null and searchWord != ''">
+						AND title LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
+			</when>
+			<when test="searchType == 'NICKNAME'">
+				<if test="searchWord != null and searchWord != ''">
+						AND creator_id LIKE CONCAT('%', #{searchWord}, '%')
+				</if>
+			</when>
+		</choose>
+		<![CDATA[					
+					ORDER BY board_idx DESC
+			    ) A
+			    WHERE @ROWNUM < #{end}
+			) B
+			WHERE B.RNUM >= #{start}
 		]]>
 	</select>
 	<insert id="insertBoard" parameterType="ringbloom.ringbloom.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardIdx">
@@ -30,7 +91,7 @@
 				#{title}, 
 				#{contents}, 
 				NOW(), 
-				'admin'			
+				#{creatorId}		
 			)
 		]]>
 	</insert>
@@ -136,4 +197,81 @@
 				board_idx = #{boardIdx}
 		]]>
 	</update>
+ 	<select id="selectCommentList" parameterType="map" resultType="ringbloom.ringbloom.dto.ReplyDto">
+		<![CDATA[
+			SELECT
+				B.RNUM,
+				B.reply_idx,
+				B.board_idx,
+				B.creator_id,
+				B.contents,
+				B.created_datetime,
+				B.updated_datetime
+			FROM
+			(
+				SELECT
+					@ROWNUM := @ROWNUM + 1 AS RNUM,
+					A.reply_idx,
+					A.board_idx,
+					A.creator_id,
+					A.contents,
+					A.created_datetime,
+					A.updated_datetime
+				FROM
+			    (
+					SELECT
+						reply_idx,
+						board_idx,
+						creator_id,
+						contents,
+						created_datetime,
+						updated_datetime
+					FROM
+						t_comment
+					WHERE
+						(@ROWNUM := 0) = 0 AND
+			            board_idx = #{boardIdx}
+					ORDER BY reply_idx DESC
+			    ) A
+			    WHERE @ROWNUM < #{end}
+			) B
+			WHERE B.RNUM >= #{start}
+		]]>
+	</select>
+	<insert id="insertComment" parameterType="ringbloom.ringbloom.dto.ReplyDto" useGeneratedKeys="true" keyProperty="replyIdx">
+		<![CDATA[
+			INSERT INTO t_comment
+			(
+				board_idx, 
+				creator_id,
+				contents,
+				created_datetime
+			) 
+			VALUES 
+			(
+				#{boardIdx}, 
+				#{creatorId},
+				#{contents}, 
+				NOW()		
+			)
+		]]>
+	</insert>
+	<select id="commentListGetCount" parameterType="map" resultType="int">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				t_comment
+			WHERE 
+				board_idx = #{boardIdx}
+		]]>
+	</select>
+	<delete id="deleteComment" parameterType="map">
+		<![CDATA[
+			DELETE
+			FROM t_comment
+			WHERE
+				reply_idx = #{replyIdx}
+		]]>
+	</delete>
 </mapper>

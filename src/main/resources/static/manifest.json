@@ -8,7 +8,8 @@
     "theme_color": "#181818",
     "background_color": "#181818",
     "gcm_sender_id": "103953800507",
-
+    "related_applications": [],
+    "prefer_related_applications": false,
     "icons": [
         {
           "src":"/icons/wcls-logo-512.png",
@@ -51,5 +52,17 @@
         "type": "image/png",
         "density": "4.0"
        }
-      ]
+      ],
+    "screenshots":[
+        {
+            "src": "/images/screen1.png"
+        },
+        {
+            "src": "/images/screen2.png"
+        },
+        {
+            "src": "/images/screen1.png"
+        }
+    ]
+
 }

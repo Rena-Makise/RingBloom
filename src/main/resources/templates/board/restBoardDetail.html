@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link th:href="@{/css/materialize.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!--    MATRIALIZE JS    -->
-  <script src="../js/materialize.js"></script>
+  <script src="/js/materialize.js"></script>
   <!--    BASE CSS FOR GENERAL    -->
   <link th:href="@{/css/style.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!-- Firebase API -->
@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
   <!--    BASE JS FOR GENERAL    -->
-  <script src="../js/init.js"></script>
+  <script src="/js/init.js"></script>
   <!--    Prograssive Web App     -->
   <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="/icons/favicon.ico">
@@ -52,11 +52,15 @@
         <ul id="nav-mobile" class="sidenav">
 	      <li><div class="user-view">
 	        <div class="background">
-	          <img src="../images/office.jpg">
+	          <img src="/images/office.jpg">
 	        </div>
 	        <a href="#user"><img class=""></a>
-	        <a href="#name"><span class="white-text name">Rena Makise</span></a>
-	        <a href="#email"><span class="white-text email">rena@admin.com</span></a>
+	        <a href="#name">
+	      		<span class="white-text name" th:text="${nickname}"></span>
+	        </a>
+	        <a href="#email">
+	      		<span class="white-text email" th:text="${email}"></span>
+	        </a>
 	      </div></li>
 	      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
 	      <li><a href="#!">Second Link</a></li>
@@ -81,28 +85,32 @@
 				<tbody>
 					<tr>
 						<th scope="row">글 번호</th>
-						<td th:text="${board.boardIdx }"></td>
+						<td th:text="${board.boardIdx}"></td>
 						<th scope="row">조회수</th>
-						<td th:text="${board.hitCnt }"></td>
+						<td th:text="${board.hitCnt}"></td>
 					</tr>
 					<tr>
 						<th scope="row">작성자</th>
-						<td th:text="${board.creatorId }"></td>
+						<td th:text="${board.creatorId}"></td>
 						<th scope="row">작성일</th>
-						<td th:text="${#temporals.format(board.createdDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+						<td th:text="${#temporals.format(board.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
 					</tr>
 					<tr>
 						<th scope="row">제목</th>
-						<td colspan="3"><input type="text" id="title" name="title" th:value="${board.title }"/></td>
+						<td colspan="3"><input type="text" id="title" name="title" th:value="${board.title}"/></td>
 					</tr>
 					<tr>
 						<td colspan="4" class="view_text">
-							<textarea title="내용" id="contents" name="contents" th:text="${board.contents }"></textarea>
+							<textarea title="내용" id="contents" name="contents" th:text="${board.contents}" disabled></textarea>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx }">
+			<input type="hidden" id="curPage" name="curPage" th:value="${curPage}">
+			<input type="hidden" id="searchType" name="searchType" th:value="${searchType}">
+			<input type="hidden" id="searchWord" name="searchWord" th:value="${searchWord}">
+			<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
+			<input type="hidden" id="nickname" name="nickname" th:value="${nickname}"> 
 			<!-- 여기 -->
 			<input type="hidden" id="method" name="_method"/>
 		</form>
@@ -115,6 +123,40 @@
 		<a href="#this" id="list" class="btn">목록으로</a>
 		<a href="#this" id="edit" class="btn">수정하기</a>
 		<a href="#this" id="delete" class="btn">삭제하기</a>
+		<table class="board_view" id="comment_table">
+			<colgroup>
+				<col width="10%">
+				<col width="15%">
+				<col width="45%">
+				<col width="20%">
+				<col width="5%">
+			</colgroup>
+			<thead>
+				<tr>
+					<th>reply_idx</th>
+					<th>user_id</th>
+					<th>content</th>
+					<th>created_time</th>
+					<th>delete</th>
+				</tr>
+			</thead>
+			<tbody id="reply_list">
+			
+			</tbody>
+		</table>
+		<br/>
+	    <div style="text-align: center;">
+	    	<ul id="pagination" class="pagination">
+	    	</ul>
+	    </div>
+		<div style="width: 660px;">
+			<p>
+				<textarea rows="10" cols="90" name="comment" id="comment"></textarea>
+			</p>
+			<p style="text-align: right;">
+				<a href="#" class="btn" id="comment_btn">등록</a>
+			</p>
+		</div>
 	</div>
     <footer class="page-footer teal">
       <div class="container">
@@ -122,8 +164,6 @@
           <div class="col l6 s12">
             <h5 class="white-text">Company Bio</h5>
             <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
           </div>
           <div class="col l3 s12">
             <h5 class="white-text">Settings</h5>
@@ -153,32 +193,157 @@
     </footer>
 	<script type="text/javascript">
 		$(document).ready(function(){
-			/* 여기 */
+			var curPage = $("#curPage").val();
 			var boardIdx = $("#boardIdx").val();
+			var searchType = $("#searchType").val();
+			var searchWord = $("#searchWord").val();
 			
 			$("#list").on("click", function(){
-				/* 여기 */
-				location.href = "/board/";
+				location.href = "/board/"+curPage + "?searchType=" + searchType + "&searchWord=" + searchWord;
 			});
 			
 			$("#edit").on("click", function(){
-				/* 여기 */
-				$("#method").val("put");
-				
-				var frm = $("#frm")[0];
-				frm.action = "/board/"+boardIdx;
-				frm.submit();
+				location.href = "/board/"+curPage+"/"+boardIdx + "/edit?searchType=" + searchType + "&searchWord=" + searchWord;
 			});
 			
 			$("#delete").on("click", function(){
-				/* 여기 */
-				$("#method").val("delete");
-				
-				var frm = $("#frm")[0];
-				frm.action = "/board/"+boardIdx;
-				frm.submit();
+				if(confirm("글을 삭제하시겠습니까?")) {
+					$("#method").val("delete");
+					
+					var frm = $("#frm")[0];
+					frm.action = "/board/"+curPage+"/"+boardIdx + "?searchType=" + searchType + "&searchWord=" + searchWord;
+					frm.submit();	
+				}
 			});
+			
+			$("#comment_btn").unbind("click").click(function(e) {
+				e.preventDefault();
+				fn_insertComment();
+			});
+			
+			if($("#reply_list").children().length < 1) {
+				fn_viewComment(1);
+			}
 		});
+		
+		function fn_insertComment() {
+			if($("#comment").val().length < 1) {
+				alert("댓글을 작성해 주세요.");
+			} else {
+				$.ajax({
+					type : "POST",
+					url : "/board/comment/write",
+					dataType : "json",
+					data : {
+						boardIdx : $("#boardIdx").val(),
+						user_id : $("#nickname").val(),
+						comment : $("#comment").val()
+					},
+					error : function(request, status, error) {
+						alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+								+ "code: " + request.status + "\n"
+								+ "message: " + request.responseText + "\n"
+								+ "error: " + error);
+					},
+					success : function(data) {
+						if(parseInt(data.result) == 1) {
+							$("#comment").val("");
+							fn_viewComment($("#pagination").find("li.active").text());
+						} else {
+							window.alert("에러가 발생하였습니다.");
+						}
+					}
+				});
+			}
+		}
+		
+		function fn_viewComment(curPage) {
+			$.ajax({
+				type : "POST",
+				url : "/board/comment",
+				dataType : "json",
+				data : {
+					boardIdx : $("#boardIdx").val(),
+					curPage : curPage < 1 ? 1 : curPage
+				},
+				error : function(request, status, error) {
+					alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+							+ "code: " + request.status + "\n"
+							+ "message: " + request.responseText + "\n"
+							+ "error: " + error);
+				},
+				success : function(result) {
+					$("#reply_list").children().remove();
+					$("#pagination").children().remove();
+					
+					var page="";
+					if (result.paging.curPage == 1) {
+						page += "<li class='disabled'><a href='#'><i class='material-icons'>first_page</i></a></li>"
+					} else {
+						page += "<li class='waves-effect'><a href='javascript:fn_viewComment(1)'><i class='material-icons'>first_page</i></a></li>"
+					}
+					if (result.paging.curBlock == 1) {
+						page += "<li class='disabled'><a href='#'><i class='material-icons'>chevron_left</i></a></li>"
+					} else {
+						page += "<li class='waves-effect'><a href='javascript:fn_viewComment(" + result.paging.prevPage + ")'><i class='material-icons'>chevron_left</i></a></li>"
+					}
+					for (var i = result.paging.pageBegin; i <= result.paging.pageEnd; ++i) {
+						if (i == result.paging.curPage) {
+							page += "<li class='active'><a href='javascript:fn_viewComment(" + i + ")'>" + i + "</a></li>"
+						} else {
+							page += "<li class='waves-effect'><a href='javascript:fn_viewComment(" + i + ")'>" + i + "</a></li>"
+						}
+					}
+					if (result.paging.curBlock == result.paging.totalBlock) {
+						page += "<li class='disabled'><a href='#'><i class='material-icons'>chevron_right</i></a></li>"
+					} else {
+						page += "<li class='waves-effect'><a href='javascript:fn_viewComment(" + result.paging.nextPage + ")'><i class='material-icons'>chevron_right</i></a></li>"
+					}
+					if (result.paging.curPage == result.paging.totalPage) {
+						page += "<li class='disabled'><a href='#'><i class='material-icons'>last_page</i></a></li>"
+					} else {
+						page += "<li class='waves-effect'><a href='javascript:fn_viewComment(" + result.paging.totalPage + ")'><i class='material-icons'>last_page</i></a></li>"
+					}
+					
+					$("#pagination").append(page);
+					
+					$(result.list).each(function(i) {
+						var str = "<tr>"
+							+ "<td>" + result.list[i].replyIdx + "</td>"
+							+ "<td>" + result.list[i].creatorId + "</td>"
+							+ "<td>" + result.list[i].contents + "</td>"
+							+ "<td>" + result.list[i].createdDatetime + "</td>"
+							+ "<td>"
+							+ ($("#nickname").val() == result.list[i].creatorId ? " <a href='javascript:fn_commentDelete(" + result.list[i].replyIdx + ")' class='waves-effect btn-flat'><i class='material-icons'>delete</i></a>" : "")
+							+ "</td>"
+							+ "</tr>";
+						$("#reply_list").append(str);
+					});
+				}
+			});
+		}
+		
+		function fn_commentDelete(id) {
+			if (confirm("댓글을 삭제하시겠습니까?")) {
+				$.ajax({
+					type : "POST",
+					url : "/board/comment/delete",
+					data : {
+						"replyIdx" : id
+					},
+					error : function(request, status, error) {
+						alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+								+ "code: " + request.status + "\n"
+								+ "message: " + request.responseText + "\n"
+								+ "error: " + error);
+					},
+					success : function() {
+						alert("댓글이 삭제되었습니다.");
+						fn_viewComment($("#pagination").find("li.active").text());
+					}
+				});
+			}
+		}
 	</script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link th:href="@{/css/materialize.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!--    MATRIALIZE JS    -->
-  <script src="../js/materialize.js"></script>
+  <script src="/js/materialize.js"></script>
   <!--    BASE CSS FOR GENERAL    -->
   <link th:href="@{/css/style.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!-- Firebase API -->
@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
   <!--    BASE JS FOR GENERAL    -->
-  <script src="../js/init.js"></script>
+  <script src="/js/init.js"></script>
   <!--    Prograssive Web App     -->
   <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="/icons/favicon.ico">
@@ -52,14 +52,14 @@
         <ul id="nav-mobile" class="sidenav">
 	      <li><div class="user-view">
 	        <div class="background">
-	          <img src="../images/office.jpg">
+	          <img src="/images/office.jpg">
 	        </div>
 	        <a href="#user"><img class=""></a>
 	        <a href="#name">
-	      	  <span class="white-text name" th:text="${nickname}"></span>
-      	    </a>
+	      		<span class="white-text name" th:text="${nickname}"></span>
+	        </a>
 	        <a href="#email">
-	      	  <span class="white-text email" th:text="${email}"></span>
+	      		<span class="white-text email" th:text="${email}"></span>
 	        </a>
 	      </div></li>
 	      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
@@ -72,25 +72,56 @@
       </div>
     </nav>
 	<div class="container">
-	    <h2>게시글 등록</h2>
-	    <!-- 여기 -->
-	    <form id="frm" name="frm" method="post" action="/board/write" enctype="multipart/form-data">
+		<h2>게시글 상세 화면</h2>
+	    <form id="frm" method="post">
 	    	<table class="board_detail">
-	    		<tr>
-	    			<td>제목</td>
-	    			<td><input type="text" id="title" name="title"/></td>
-	    		</tr>
-	    		<tr>
-	    			<td colspan="2">
-		    			<textarea id="contents" name="contents"></textarea>
-	    			</td>
-	    		</tr>
-	    	</table>
-	    	<input type="file" id="files" name="files" multiple="multiple">
-	    	<input type="submit" id="submit" value="저장" class="btn">
-			<input type="hidden" id="creatorId" name="creatorId" th:value="${nickname}"> 
-	    </form>
-    </div>
+				<colgroup>
+					<col width="15%"/>
+					<col width="35%"/>
+					<col width="15%"/>
+					<col width="35%"/>
+				</colgroup>
+				<caption>게시글 상세내용</caption>
+				<tbody>
+					<tr>
+						<th scope="row">글 번호</th>
+						<td th:text="${board.boardIdx }"></td>
+						<th scope="row">조회수</th>
+						<td th:text="${board.hitCnt }"></td>
+					</tr>
+					<tr>
+						<th scope="row">작성자</th>
+						<td th:text="${board.creatorId }"></td>
+						<th scope="row">작성일</th>
+						<td th:text="${#temporals.format(list.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
+					</tr>
+					<tr>
+						<th scope="row">제목</th>
+						<td colspan="3"><input type="text" id="title" name="title" th:value="${board.title}"/></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="view_text">
+							<textarea title="내용" id="contents" name="contents" th:text="${board.contents}"></textarea>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<input type="hidden" id="curPage" name="curPage" th:value="${curPage}">
+			<input type="hidden" id="searchType" name="searchType" th:value="${searchType}">
+			<input type="hidden" id="searchWord" name="searchWord" th:value="${searchWord}">
+			<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
+			<!-- 여기 -->
+			<input type="hidden" id="method" name="_method"/>
+		</form>
+		
+		<div class="file_list">
+			<!-- 여기 -->
+			<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+		</div>
+		
+		<a href="#this" id="list" class="btn">목록으로</a>
+		<a href="#this" id="edit" class="btn">수정완료</a>
+	</div>
     <footer class="page-footer teal">
       <div class="container">
         <div class="row">
@@ -126,5 +157,25 @@
         </div>
       </div>
     </footer>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var curPage = $("#curPage").val();
+			var boardIdx = $("#boardIdx").val();
+			var searchType = $("#searchType").val();
+			var searchWord = $("#searchWord").val();
+			
+			$("#list").on("click", function(){
+				location.href = "/board/"+curPage + "?searchType=" + searchType + "&searchWord=" + searchWord;
+			});
+			
+			$("#edit").on("click", function(){
+				$("#method").val("put");
+				
+				var frm = $("#frm")[0];
+				frm.action = "/board/"+curPage+"/"+boardIdx + "/edit?searchType=" + searchType + "&searchWord=" + searchWord;
+				frm.submit();
+			});
+		});
+	</script>
 </body>
 </html>
