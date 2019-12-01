@@ -1,6 +1,7 @@
 /* UserServiceImpl.java
  * Description : 사용자 처리 서비스 구현
- * ver 0.1 : 초기 구성 - 이 창 재
+ * ver 0.1 : 초기 구성
+ * ver 0.2 : 토큰 처리 추가
  */
 package ringbloom.ringbloom.service;
 
@@ -34,4 +35,13 @@ public class UserServiceImpl implements UserService {
 		return userMapper.checkLogin(nickname, password);
 	}
 	
+	@Override
+	public String checkTokenUser(String token) throws Exception {
+		return userMapper.checkTokenUser(token);
+	}
+
+	@Override
+	public void updateToken(String nickname, String token) throws Exception {
+		userMapper.updateToken(nickname, token);		
+	}	
 }

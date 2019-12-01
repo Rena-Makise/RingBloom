@@ -23,4 +23,5 @@ public interface BoardService {
 	void insertComment(ReplyDto reply) throws Exception;
 	int commentListGetCount(int boardIdx) throws Exception;
 	void deleteComment(int replyIdx) throws Exception;
+	String checkToken(int boardIdx) throws Exception;
 }

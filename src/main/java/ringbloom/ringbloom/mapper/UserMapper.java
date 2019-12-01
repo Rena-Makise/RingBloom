@@ -1,6 +1,7 @@
 /* UserMapper.java
  * Description : 유저 매퍼 - XML 쿼리와 매핑
- * ver 0.1 : 초기 구성 - 이 창 재
+ * ver 0.1 : 초기 구성
+ * ver 0.2 : 토큰 처리 추가
  */
 package ringbloom.ringbloom.mapper;
 
@@ -16,4 +17,6 @@ public interface UserMapper {
 	void signUp(UserDto member) throws Exception;
 	Map<String, Object> countNickname(String nickname) throws Exception;
 	UserDto checkLogin(@Param("nickname") String nickname, @Param("password") String password) throws Exception;
+	String checkTokenUser(@Param("token") String token) throws Exception;
+	void updateToken(@Param("nickname") String nickname, @Param("token") String token) throws Exception;
 }

@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link th:href="@{/css/materialize.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!--    MATRIALIZE JS    -->
-  <script src="../js/materialize.js"></script>
+  <script src="/js/materialize.js"></script>
   <!--    BASE CSS FOR GENERAL    -->
   <link th:href="@{/css/style.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
   <!-- Firebase API -->
@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
   <!--    BASE JS FOR GENERAL    -->
-  <script src="../js/init.js"></script>
+  <script src="/js/init.js"></script>
   <!--    Prograssive Web App     -->
   <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="/icons/favicon.ico">
@@ -42,35 +42,57 @@
   <script src="/pwabuilder-sw-register.js"></script>
 </head>
 <body>
-    <nav class="white" role="navigation">
-      <div class="nav-wrapper container">
-        <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
-        <ul class="right hide-on-med-and-down">
-          <li><a href="#">Navbar Link</a></li>
-        </ul>
-
-        <ul id="nav-mobile" class="sidenav">
-	      <li><div class="user-view">
-	        <div class="background">
-	          <img src="../images/office.jpg">
-	        </div>
-	        <a href="#user"><img class=""></a>
-	        <a href="#name">
-	      	  <span class="white-text name" th:text="${nickname}"></span>
-      	    </a>
-	        <a href="#email">
-	      	  <span class="white-text email" th:text="${email}"></span>
-	        </a>
-	      </div></li>
-	      <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-	      <li><a href="#!">Second Link</a></li>
-	      <li><div class="divider"></div></li>
-	      <li><a class="subheader">Subheader</a></li>
-	      <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+	<!-- Dropdown Structure -->
+	<ul id="dropdown1" class="dropdown-content">
+		<li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+	    <li class="divider"></li>
+	    <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	</ul>
+    <!--   NAVIGATION BAR     -->
+	<nav class="white" role="navigation">
+	  <div class="nav-wrapper container">
+	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
+	    <ul class="right hide-on-med-and-down">
+	      <li><a href="/board">게시판</a></li>
+          <li>
+	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
+	              <span th:text="${nickname}">
+	              </span>
+	              <i class="material-icons right">arrow_drop_down</i>
+	          </a>
+          </li>
 	    </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      </div>
-    </nav>
+	
+		 <ul id="nav-mobile" class="sidenav">
+			 <li>
+				<div class="user-view">
+					<div class="background">
+					  <img src="/images/office.jpg">
+					</div>
+					<a href="#user"><i class="medium material-icons"></i></a>
+					<a href="#name">
+						<span class="white-text name" th:text="${nickname}"></span>
+						<input type="hidden" id="login" name="login" th:value="${login}"> 
+					</a>
+					<a href="#email">
+						<span class="white-text email" th:text="${email}"></span>
+					</a>
+				</div>
+			 </li>
+			 <li><a class="subheader">RingBloom</a></li>
+			 <li><a class="waves-effect" href="/"><i class="material-icons">home</i>홈</a></li>
+		 	<li><a class="waves-effect" href="/board"><i class="material-icons">forum</i>게시판</a></li>
+	         <li>
+	             <div class="divider"></div>
+	         </li>
+	         <li><a class="subheader">User</a></li>
+			 <li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+		     <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+		</ul>
+	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+	  </div>
+	</nav>
+	
 	<div class="container">
 	    <h2>게시글 등록</h2>
 	    <!-- 여기 -->
@@ -126,5 +148,42 @@
         </div>
       </div>
     </footer>
+    <script type="text/javascript">
+		// FCM 메시지 설정 코드
+		var messaging = firebase.messaging();
+		messaging.requestPermission()
+		    .then(function(){
+		        console.log('메세징 권한 획득');
+		        return messaging.getToken();
+		    })
+		    .then(function(token){
+		        console.log('fcm token: ', token);
+		      	console.log("토큰 업데이트");
+		        $.ajax({
+		             type: "POST",
+		             url: "/user/token",
+		             dataType: "json",
+		             data: {
+		           	 	token : token
+		             },
+					 error : function(request, status, error) {
+						  alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+								  + "code: " + request.status + "\n"
+								  + "message: " + request.responseText + "\n"
+								  + "error: " + error);
+					 },
+		             success: function(result){
+			           	  if(result == 1) {
+			           		  console.log("토큰 업데이트 성공");
+			           	  } else {
+			           		  console.log("토큰 업데이트 불필요");
+			           	  }		              
+		           	 }
+		        });
+		    })
+		    .catch(function(e){
+		        console.log('메세징 권한 획득 중 에러', e);
+		    });
+    </script>
 </body>
 </html>

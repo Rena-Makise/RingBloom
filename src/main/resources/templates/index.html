@@ -19,7 +19,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
   <!--    BASE JS FOR GENERAL    -->
-  <script src="js/init.js"></script>
+  <script src="/js/init.js"></script>
   <!--    Prograssive Web App     -->
   <link rel="manifest" href="/manifest.json">
   <link rel="shortcut icon" href="/icons/favicon.ico">
@@ -42,184 +42,195 @@
   <script src="/pwabuilder-sw-register.js"></script>
 </head>
 <body>
-  <nav class="white" role="navigation">
-    <div class="nav-wrapper container">
-      <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#">Navbar Link</a></li>
-      </ul>
-
-      <ul id="nav-mobile" class="sidenav">
-	    <li><div class="user-view">
-	      <div class="background">
-	        <img src="images/office.jpg">
+	<!-- Dropdown Structure -->
+	<ul id="dropdown1" class="dropdown-content">
+		<span th:if="${login eq 'login'}">
+			<li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+		    <li class="divider"></li>
+		    <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	    </span>
+		<span th:unless="${login eq 'login'}">
+		    <li><a class="waves-effect" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
+		    <li><a class="waves-effect" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+		</span>
+	</ul>
+    <!--   NAVIGATION BAR     -->
+	<nav class="white" role="navigation">
+	  <div class="nav-wrapper container">
+	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
+	    <ul class="right hide-on-med-and-down">
+	      <span th:if="${login eq 'login'}">
+	      	<li><a href="/board">게시판</a></li>
+	      </span>
+          <li>
+	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
+	              <span th:text="${nickname}">
+	              </span>
+	              <i class="material-icons right">arrow_drop_down</i>
+	          </a>
+          </li>
+	    </ul>
+	
+		 <ul id="nav-mobile" class="sidenav">
+			 <li>
+				<div class="user-view">
+					<div class="background">
+					  <img src="/images/office.jpg">
+					</div>
+					<a href="#user"><i class="medium material-icons"></i></a>
+					<a href="#name">
+						<span class="white-text name" th:text="${nickname}"></span>
+						<input type="hidden" id="login" name="login" th:value="${login}"> 
+					</a>
+					<a href="#email">
+						<span class="white-text email" th:text="${email}"></span>
+					</a>
+				</div>
+			 </li>
+			 <li><a class="subheader">RingBloom</a></li>
+			 <li><a class="waves-effect" href="/"><i class="material-icons">home</i>홈</a></li>
+ 			 <span th:if="${login eq 'login'}">
+			 	<li><a class="waves-effect" href="/board"><i class="material-icons">forum</i>게시판</a></li>
+			 </span>
+	         <li>
+	             <div class="divider"></div>
+	         </li>
+	         <li><a class="subheader">User</a></li>
+			 <span th:if="${login eq 'login'}">
+				 <li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+			     <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+		     </span>
+			 <span th:unless="${login eq 'login'}">
+			     <li><a class="waves-effect" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
+			     <li><a class="waves-effect" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+			 </span>
+		</ul>
+	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+	  </div>
+	</nav>
+	
+	<div id="index-banner" class="parallax-container">
+	  <div class="section no-pad-bot">
+	    <div class="container">
+	      <br><br>
+	      <h1 class="header center teal-text text-lighten-2">Parallax Template</h1>
+	      <div class="row center">
+	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
 	      </div>
-	      <a href="#user"><img class=""></a>
-	      <a href="#name">
-	      	<span class="white-text name" th:text="${nickname}"></span>
-      	  </a>
-	      <a href="#email">
-	      	<span class="white-text email" th:text="${email}"></span>
-	      </a>
-	    </div></li>
-	    <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
-   	    <li><a href="#" id="loginBtn">Login</a></li>
-	    <li><a href="#" id="logoutBtn">Logout</a></li>
-	    <li><div class="divider"></div></li>
-	    <li><a class="subheader">Subheader</a></li>
-	    <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
-	  </ul>
-      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
-
-  <div id="index-banner" class="parallax-container">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <br><br>
-        <h1 class="header center teal-text text-lighten-2">Parallax Template</h1>
-        <div class="row center">
-          <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-        <div class="row center">
-          <a href="/board" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
-        </div>
-        <br><br>
-
-      </div>
-    </div>
-    <div class="parallax"><img src="images/background1.jpg" alt="Unsplashed background img 1"></div>
-  </div>
-
-
-  <div class="container">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Speeds up development</h5>
-
-            <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">User Experience Focused</h5>
-
-            <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Easy to work with</h5>
-
-            <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax"><img src="images/background2.jpg" alt="Unsplashed background img 2"></div>
-  </div>
-
-  <div class="container">
-    <div class="section">
-
-      <div class="row">
-        <div class="col s12 center">
-          <h3><i class="mdi-content-send brown-text"></i></h3>
-          <h4>Contact Us</h4>
-          <p class="left-align light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque id nunc nec volutpat. Etiam pellentesque tristique arcu, non consequat magna fermentum ac. Cras ut ultricies eros. Maecenas eros justo, ullamcorper a sapien id, viverra ultrices eros. Morbi sem neque, posuere et pretium eget, bibendum sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget dignissim mauris, non tristique erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax"><img src="images/background3.jpg" alt="Unsplashed background img 3"></div>
-  </div>
-
-  <footer class="page-footer teal">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">Company Bio</h5>
-          <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      	Made by <a class="brown-text text-lighten-3" href="">Rena Makise</a>
-      </div>
-    </div>
-  </footer>
+	      <div class="row center">
+	        <a href="/board" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
+	      </div>
+	      <br><br>
+	
+	    </div>
+	  </div>
+	  <div class="parallax"><img src="images/background1.jpg" alt="Unsplashed background img 1"></div>
+	</div>
+	
+	
+	<div class="container">
+	  <div class="section">
+	    <!--   Icon Section   -->
+	    <div class="row">
+	      <div class="col s12 m4">
+	        <div class="icon-block">
+	          <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
+	          <h5 class="center">Speeds up development</h5>
+	          <p class="light">We did most of the heavy lifting for you to provide a default stylings that incorporate our custom components. Additionally, we refined animations and transitions to provide a smoother experience for developers.</p>
+	        </div>
+	      </div>
+	      <div class="col s12 m4">
+	        <div class="icon-block">
+	          <h2 class="center brown-text"><i class="material-icons">group</i></h2>
+	          <h5 class="center">User Experience Focused</h5>
+	          <p class="light">By utilizing elements and principles of Material Design, we were able to create a framework that incorporates components and animations that provide more feedback to users. Additionally, a single underlying responsive system across all platforms allow for a more unified user experience.</p>
+	        </div>
+	      </div>
+	      <div class="col s12 m4">
+	        <div class="icon-block">
+	          <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
+	          <h5 class="center">Easy to work with</h5>
+	          <p class="light">We have provided detailed documentation as well as specific code examples to help new users get started. We are also always open to feedback and can answer any questions a user may have about Materialize.</p>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	<div class="parallax-container valign-wrapper">
+	  <div class="section no-pad-bot">
+	    <div class="container">
+	      <div class="row center">
+	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="parallax"><img src="images/background2.jpg" alt="Unsplashed background img 2"></div>
+	</div>
+	
+	<div class="container">
+	  <div class="section">
+	    <div class="row">
+	      <div class="col s12 center">
+	        <h3><i class="mdi-content-send brown-text"></i></h3>
+	        <h4>Contact Us</h4>
+	        <p class="left-align light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque id nunc nec volutpat. Etiam pellentesque tristique arcu, non consequat magna fermentum ac. Cras ut ultricies eros. Maecenas eros justo, ullamcorper a sapien id, viverra ultrices eros. Morbi sem neque, posuere et pretium eget, bibendum sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget dignissim mauris, non tristique erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	
+	<div class="parallax-container valign-wrapper">
+	  <div class="section no-pad-bot">
+	    <div class="container">
+	      <div class="row center">
+	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="parallax"><img src="images/background3.jpg" alt="Unsplashed background img 3"></div>
+	</div>
+	
+	<footer class="page-footer teal">
+	  <div class="container">
+	    <div class="row">
+	      <div class="col l6 s12">
+	        <h5 class="white-text">Company Bio</h5>
+	        <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+	      </div>
+	      <div class="col l3 s12">
+	        <h5 class="white-text">Settings</h5>
+	        <ul>
+	          <li><a class="white-text" href="#!">Link 1</a></li>
+	          <li><a class="white-text" href="#!">Link 2</a></li>
+	          <li><a class="white-text" href="#!">Link 3</a></li>
+	          <li><a class="white-text" href="#!">Link 4</a></li>
+	        </ul>
+	      </div>
+	      <div class="col l3 s12">
+	        <h5 class="white-text">Connect</h5>
+	        <ul>
+	          <li><a class="white-text" href="#!">Link 1</a></li>
+	          <li><a class="white-text" href="#!">Link 2</a></li>
+	          <li><a class="white-text" href="#!">Link 3</a></li>
+	          <li><a class="white-text" href="#!">Link 4</a></li>
+	        </ul>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="footer-copyright">
+	    <div class="container">
+	    	Made by <a class="brown-text text-lighten-3" href="">Rena Makise</a>
+	    </div>
+	  </div>
+	</footer>
 	
   <script type="text/javascript">
 	  $(document).ready(function() {
-		  $("#loginBtn").unbind("click").click(function(e) {
-			  e.preventDefault();
-    	  	  fn_login();
-		  });
-		  $("#logoutBtn").unbind("click").click(function(e) {
-			  e.preventDefault();
-    	  	  fn_logout();
-		  });
+	      $('.parallax').parallax();
 	  });
-	  
-	  function fn_login() {
-		  window.location.href="/user/login";
-	  }
-	  function fn_logout() {
-		  window.location.href="/user/logout";
-	  }
 	  
 	  // FCM 메시지 설정 코드
 	  var messaging = firebase.messaging();
@@ -230,18 +241,30 @@
 	      })
 	      .then(function(token){
 	          console.log('fcm token: ', token);
-/* 	          $.ajax({
-	              type: "POST",
-	              url: "/main/updateToken",
-	              data: token,
-	              dataType: "TEXT",
-	              success: function(text){
-	                  console.log('전송성공');
-	              },
-	              error: function(xhr, status, error){
-	                  console.log(error);
-	              }
-	          }); */
+	          console.log($("#login").val());
+	          if ($("#login").val() == "login") {
+	        	  console.log("토큰 업데이트");
+ 	 	          $.ajax({
+		              type: "POST",
+		              url: "/user/token",
+		              dataType: "json",
+		              data: {
+		            	  token : token
+		              },
+					  error : function(request, status, error) {
+						  alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+								  + "code: " + request.status + "\n"
+								  + "message: " + request.responseText + "\n"
+								  + "error: " + error);
+					  },
+		              success: function(result){
+		            	  if(result == 1) {
+		            		  console.log("토큰 업데이트 성공");
+		            	  } else {
+		            		  console.log("토큰 업데이트 불필요");
+		            	  }		              }
+		          });
+	          }
 	      })
 	      .catch(function(e){
 	          console.log('메세징 권한 획득 중 에러', e);

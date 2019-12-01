@@ -7,18 +7,19 @@
 package ringbloom.ringbloom.controller;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.jaxb.SpringDataJaxb.PageDto;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,8 +33,10 @@ import org.springframework.web.servlet.ModelAndView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import ringbloom.common.firebase.FCMService;
 import ringbloom.ringbloom.dto.BoardDto;
 import ringbloom.ringbloom.dto.BoardFileDto;
+import ringbloom.ringbloom.dto.NotificationDto;
 import ringbloom.ringbloom.dto.PagingDto;
 import ringbloom.ringbloom.dto.ReplyDto;
 import ringbloom.ringbloom.service.BoardService;
@@ -132,6 +135,12 @@ public class RestBoardController {
 		ModelAndView mv = new ModelAndView("/board/restBoardEdit");
 		
 		BoardDto board = boardService.selectBoardDetail(boardIdx);
+		if(!request.getSession().getAttribute("nickname").toString().equals(board.getCreatorId()) ) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('수정 권한이 없습니다.'); window.location.href='/board';</script>");
+			out.flush();
+		}
 		mv.addObject("curPage", curPage);
 		mv.addObject("board", board);
 		mv.addObject("searchType", searchType);
@@ -146,11 +155,12 @@ public class RestBoardController {
 	
 	@ApiOperation(value = "게시글 수정")
 	@RequestMapping(value = "/board/{curPage}/{boardIdx}/edit", method = RequestMethod.PUT)
-	public String updateBoard(BoardDto board,
+	public String updateBoard(HttpServletRequest request, HttpServletResponse response, BoardDto board, 
 			@PathVariable("curPage") int curPage, 
 			@PathVariable("boardIdx") int boardIdx,
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
+		board.setUpdaterId(request.getSession().getAttribute("nickname").toString());
 		boardService.updateBoard(board);
 		return "redirect:/board/" + curPage + "/" + boardIdx + "?searchType=" + searchType + "&searchWord=" + searchWord;
 	}
@@ -207,13 +217,40 @@ public class RestBoardController {
 	@ApiOperation(value = "댓글등록")
 	@RequestMapping(value = "/board/comment/write", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> insertComment(@RequestParam int boardIdx, @RequestParam String user_id, @RequestParam String comment) throws Exception {
+	public Map<String, Object> insertComment(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam int boardIdx, 
+			@RequestParam String user_id, 
+			@RequestParam String title,
+			@RequestParam String comment) throws Exception {
 		ReplyDto reply = new ReplyDto();
 		reply.setBoardIdx(boardIdx);
 		reply.setCreatorId(user_id);
 		reply.setContents(comment);
 		
 		boardService.insertComment(reply);
+		
+		String creatorToken = boardService.checkToken(boardIdx);
+		log.debug("작성자 토큰 : " + creatorToken);
+		
+		if(creatorToken != null) {
+			log.debug("푸시 알림 전송 시도");
+			FCMService fcmService = new FCMService();
+			String sender = request.getSession().getAttribute("nickname").toString();
+			String messagetitle = sender+"님이 댓글을 달았습니다.";
+			String message = "[" + title + "] 글에 " + sender + "님이 댓글을 달았습니다!";
+			NotificationDto notificationRequest = NotificationDto.builder()
+					.title(messagetitle)
+					.token(creatorToken)
+					.message(message)
+					.icon("/icons/android-icon-192x192.png")
+					.build();
+			try {
+				fcmService.send(notificationRequest);
+			} catch (InterruptedException | ExecutionException e) {
+				log.error(e.getMessage());
+			}
+		}
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("result", 1);
 		

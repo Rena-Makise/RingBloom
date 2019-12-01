@@ -114,4 +114,10 @@ public class BoardServiceImpl implements BoardService {
 	public void deleteComment(int replyIdx) throws Exception {
 		boardMapper.deleteComment(replyIdx);
 	}
+	
+	// 해당 게시물 작성자 토큰 검색
+	@Override
+	public String checkToken(int boardIdx) throws Exception {
+		return boardMapper.checkToken(boardIdx);
+	}
 }

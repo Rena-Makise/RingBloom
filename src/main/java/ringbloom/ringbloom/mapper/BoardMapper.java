@@ -31,4 +31,5 @@ public interface BoardMapper {
 	void insertComment(ReplyDto reply) throws Exception;
 	int commentListGetCount(@Param("boardIdx") int boardIdx) throws Exception;
 	void deleteComment(@Param("replyIdx") int replyIdx) throws Exception;
+	String checkToken(@Param("boardIdx") int boardIdx) throws Exception;
 }

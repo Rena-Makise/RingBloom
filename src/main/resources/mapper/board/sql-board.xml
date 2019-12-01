@@ -181,7 +181,7 @@
 				title = #{title},
 				contents = #{contents},
 				updated_datetime = Now(),
-				updater_id = 'admin'
+				updater_id = #{updaterId}
 			WHERE 
 				board_idx = #{boardIdx}
 		]]>
@@ -274,4 +274,20 @@
 				reply_idx = #{replyIdx}
 		]]>
 	</delete>
+	<select id="checkToken" parameterType="int" resultType="String">
+		<![CDATA[
+			SELECT
+				token
+			FROM
+				t_user
+			WHERE
+				nickname = 
+					(SELECT 
+						creator_id
+					FROM
+						t_board
+					WHERE
+						board_idx = #{boardIdx})
+		]]>
+	</select>
 </mapper>

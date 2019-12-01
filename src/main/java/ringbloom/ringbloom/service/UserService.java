@@ -9,4 +9,6 @@ public interface UserService {
 	void signUp(UserDto user) throws Exception;
 	int countNickname(String nickname) throws Exception;
 	UserDto checkLogin(String nickname, String password) throws Exception;
+	String checkTokenUser(String token) throws Exception;
+	void updateToken(String nickname, String token) throws Exception;
 }

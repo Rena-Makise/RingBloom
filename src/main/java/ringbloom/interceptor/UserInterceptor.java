@@ -4,6 +4,8 @@
  */
 package ringbloom.interceptor;
 
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,6 +29,20 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 			if (request.getRequestURI().contains("/board")) {
 				if (request.getSession().getAttribute("nickname") == null) {
 					response.sendRedirect("/user/needLogin");
+					return false;
+				} else {
+					return true;
+				}
+			} else if (request.getRequestURI().contains("/user/signup")) {
+				if (request.getSession().getAttribute("nickname") != null) {
+					response.sendRedirect("/user/alreadyLogin");
+					return false;
+				} else {
+					return true;
+				}
+			} else if (request.getRequestURI().contains("/user/login")) {
+				if (request.getSession().getAttribute("nickname") != null) {
+					response.sendRedirect("/user/alreadyLogin");
 					return false;
 				} else {
 					return true;

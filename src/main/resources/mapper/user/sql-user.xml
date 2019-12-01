@@ -56,4 +56,24 @@
 				AND password = #{password}
 		]]>
 	</select>
+	<select id="checkTokenUser" parameterType="map" resultType="String">
+		<![CDATA[
+			SELECT
+				nickname
+			FROM
+				t_user
+			WHERE
+				token = #{token}
+		]]>
+	</select>
+	<update id="updateToken" parameterType="map">
+		<![CDATA[
+			UPDATE 
+				t_user 
+			SET 
+				token = #{token}
+			WHERE 
+				nickname = #{nickname}
+		]]>
+	</update>
 </mapper>

@@ -1,6 +1,7 @@
 /* RestUserController.java
  * Description : REST 유저 컨트롤러
- * ver 0.1 : 초기 구성 - 이 창 재
+ * ver 0.1 : 초기 구성
+ * ver 0.2 : 토큰 처리 추가
  */
 package ringbloom.ringbloom.controller;
 
@@ -37,12 +38,6 @@ public class RestUserController {
 	@RequestMapping(value = "/user/signup", method = RequestMethod.GET)
 	public ModelAndView openSignUp(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		ModelAndView mv = new ModelAndView("/user/signUp");
-		if (request.getSession().getAttribute("nickname") != null) {
-			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<script>alert('이미 로그인된 상태입니다.'); window.location.href='/';</script>");
-			out.flush();
-		}
 		mv.addObject("nickname", "Guest");
 		mv.addObject("email", "");
 		return mv;
@@ -70,7 +65,7 @@ public class RestUserController {
 	}
 	
 	@ApiOperation(value = "닉네임 중복 체크")
-	@RequestMapping(value = "/user/checkNickname", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/nickname", method = RequestMethod.POST)
 	@ResponseBody
 	public int checkNickname(@RequestParam String nickname) throws Exception {
 		int checkResult = userService.countNickname(nickname);
@@ -81,12 +76,6 @@ public class RestUserController {
 	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
 	public ModelAndView openLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ModelAndView mv = new ModelAndView("/user/login");
-		if (request.getSession().getAttribute("nickname") != null) {
-			response.setContentType("text/html; charset=UTF-8");
-			PrintWriter out = response.getWriter();
-			out.println("<script>alert('이미 로그인된 상태입니다.'); window.location.href='/';</script>");
-			out.flush();
-		}
 		mv.addObject("nickname", "Guest");
 		mv.addObject("email", "");
 		return mv;
@@ -98,6 +87,15 @@ public class RestUserController {
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		out.println("<script>alert('로그인이 필요합니다'); window.location.href='/user/login';</script>");
+		out.flush();
+	}
+	
+	@ApiOperation(value = "로그인 불필요 처리")
+	@RequestMapping(value = "/user/alreadyLogin", method = RequestMethod.GET)
+	public void alreadyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script>alert('이미 로그인된 상태입니다.'); window.location.href='/';</script>");
 		out.flush();
 	}
 	
@@ -117,7 +115,7 @@ public class RestUserController {
 		} else {
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
-			out.println("<script>alert('로그인에 실패하였습니다/'); window.location.href='/user/login';</script>");
+			out.println("<script>alert('로그인에 실패하였습니다'); window.location.href='/user/login';</script>");
 			out.flush();
 		}
 		return mv;
@@ -126,6 +124,7 @@ public class RestUserController {
 	@ApiOperation(value = "로그아웃 처리")
 	@RequestMapping(value = "/user/logout", method = RequestMethod.GET)
 	public void execLogout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		userService.updateToken(request.getSession().getAttribute("nickname").toString(), "");
 		request.getSession().removeAttribute("nickname");
 		request.getSession().removeAttribute("email");
 		request.getSession().removeAttribute("token");
@@ -142,7 +141,7 @@ public class RestUserController {
 	}
 	
 	@ApiOperation(value = "유저정보 화면")
-	@RequestMapping(value = "/user/userinfo", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/account", method = RequestMethod.GET)
 	public String openUserInfo() throws Exception {
 		return "/user/userInfo";
 	}
@@ -151,5 +150,39 @@ public class RestUserController {
 	@RequestMapping(value = "/user/admin", method = RequestMethod.GET)
 	public String openAdmin() throws Exception {
 		return "/user/admin";
+	}
+	
+	@ApiOperation(value = "토큰정보 업데이트")
+	@RequestMapping(value = "/user/token", method = RequestMethod.POST)
+	@ResponseBody
+	public int updateToken(HttpServletRequest request, HttpServletResponse response, 
+			@RequestParam String token) throws Exception {
+		int result = 0;
+		String nickname = request.getSession().getAttribute("nickname").toString();
+		
+		if(request.getSession().getAttribute("token") == null) {
+			log.debug("토큰갱신필요");
+			log.debug("디바이스 토큰 : " + token);
+			String beforeTokenUser = userService.checkTokenUser(token);
+			if(beforeTokenUser != null) {
+				log.debug("기존 토큰 유저 삭제 : " + beforeTokenUser);
+				userService.updateToken(beforeTokenUser, "");
+			}
+			userService.updateToken(nickname, token);
+			request.getSession().setAttribute("token", token);
+			result = 1;
+		} else {
+			String sessionToken = request.getSession().getAttribute("token").toString();
+			if (!token.equals(sessionToken)) {
+				log.debug("토큰갱신필요");
+				log.debug("디바이스 토큰 : " + token);
+				log.debug("세션토큰 : " + sessionToken);
+				userService.updateToken(nickname, token);
+				request.getSession().setAttribute("token", token);
+				result = 1;
+			}
+		}
+
+		return result;
 	}
 }
