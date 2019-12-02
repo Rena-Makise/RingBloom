@@ -44,14 +44,24 @@
 <body class="darkmode">
 	<!-- Dropdown Structure -->
 	<ul id="dropdown1" class="dropdown-content dropdown-darken z-depth-3">
-	    <li><a class="waves-effect darkmode-text" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
-	    <li><a class="waves-effect darkmode-text" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+		<span th:if="${login eq 'login'}">
+			<li><a class="waves-effect darkmode-text" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+		    <li class="divider divider-darken"></li>
+		    <li><a class="waves-effect darkmode-text" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	    </span>
+		<span th:unless="${login eq 'login'}">
+		    <li><a class="waves-effect darkmode-text" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
+		    <li><a class="waves-effect darkmode-text" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+		</span>
 	</ul>
     <!--   NAVIGATION BAR     -->
 	<nav class="nav-darken" role="navigation">
 	  <div class="nav-wrapper container">
 	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
 	    <ul class="right hide-on-med-and-down">
+	      <span th:if="${login eq 'login'}">
+	      	<li><a href="/board">게시판</a></li>
+	      </span>
           <li>
 	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
 	              <span th:text="${nickname}">
@@ -79,12 +89,21 @@
 			 </li>
 			 <li><a class="subheader darkmode-text">RingBloom</a></li>
 			 <li><a class="waves-effect sidenav-text" href="/"><i class="material-icons icon-darken">home</i>홈</a></li>
+ 			 <span th:if="${login eq 'login'}">
+			 	<li><a class="waves-effect sidenav-text" href="/board"><i class="material-icons icon-darken">forum</i>게시판</a></li>
+			 </span>
 	         <li>
 	             <div class="divider divider-darken"></div>
 	         </li>
 	         <li><a class="subheader darkmode-text">User</a></li>
-		     <li><a class="waves-effect sidenav-text" href="/user/signup" ><i class="material-icons icon-darken">library_add</i>회원가입</a></li>
-		     <li><a class="waves-effect sidenav-text" href="/user/login"><i class="material-icons icon-darken">vpn_key</i>로그인</a></li>
+			 <span th:if="${login eq 'login'}">
+				 <li><a class="waves-effect sidenav-text" href="/user/logout" id="logoutBtn"><i class="material-icons icon-darken">exit_to_app</i>로그아웃</a></li>
+			     <li><a class="waves-effect sidenav-text" href="/user/account"><i class="material-icons icon-darken">settings</i>내 계정</a></li>
+		     </span>
+			 <span th:unless="${login eq 'login'}">
+			     <li><a class="waves-effect sidenav-text" href="/user/signup" ><i class="material-icons icon-darken">library_add</i>회원가입</a></li>
+			     <li><a class="waves-effect sidenav-text" href="/user/login"><i class="material-icons icon-darken">vpn_key</i>로그인</a></li>
+			 </span>
 		</ul>
 	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 	  </div>
@@ -95,8 +114,8 @@
 	        <div class="row sub-banner">
 	            <div class="container">
 	                <div class="col s12 m6 acinfo">
-	                    <h4 class="userinfo"><b>회원가입</b></h4>
-	                    <p class="userinfo subinfo">Welcome to RingBloom!</p>
+	                    <h4 class="userinfo"><b>비밀번호 재설정</b></h4>
+	                    <p class="userinfo subinfo">Reset your password</p>
 	                </div>
 	                <div class="col s12 m6 sbinfo">
 	                </div>
@@ -107,36 +126,25 @@
             <div class="container">
                 <div class="col s12 m12">
                     <div style="position: relative; top:3vh;">
-                        <!-- 회원가입 폼 시작-->
+                        <!-- 폼 시작-->
                         <form id="frm">
+                        	<span th:unless="${login eq 'login'}">
                             <div class="row" style="padding:10px; margin: 10px auto;">
-                                <h4><b>기본 정보</b></h4>
+                                <h4><b>정보 체크</b></h4>
                                 <!-- nickname -->
-                                <div class="input-field col s9">
+                                <p>닉네임을 알려주세요.</p>
+                                <div class="input-field col s12">
                                     <input type="text" id="nickname" name="NICKNAME" class="validate" placeholder="닉네임">
                                     <label for="nickname">닉네임</label>
                                 </div>
-                                <div class="input-field col s3">
-                                    <a href="#" id="nickname_checkBtn" class="btn waves-effect waves-light navyblue"><i class="material-icons">check</i></a>
-                                </div>
-                                <!-- password -->
-                                <div class="input-field col s6">
-                                    <input type="password" id="password" name="PASSWORD" class="validate" placeholder="비밀번호">
-                                    <label for="password">비밀번호</label>
-                                </div>
-                                <div class="input-field col s6">
-                                    <input id="password_chk" type="password" class="validate" placeholder="비밀번호 확인">
-                                    <label for="password">비밀번호 확인</label>
-                                </div>
                                 <!-- E-mail -->
+                                <p>E-mail을 알려주세요.</p>
                                 <div class="input-field col s12">
                                     <input type="text" id="email" name="EMAIL" class="validate" placeholder="E-mail">
                                     <label for="e_mail">E-mail</label>
                                 </div>
-                            </div>
-                            <div class="row" style="padding:10px; margin: 10px auto;">
-                                <h4 ><b>비밀번호 찾기용 Q&A</b></h4>
                                 <!-- OP1 -->
+                                <p>비밀번호 찾기용 Q&A를 알려주세요</p>
                                 <div class="input-field col s12">
                                     <input type="text" id="op1" name="OP1" class="validate" placeholder="비밀번호 찾기용 질문1">
                                     <label for="op1">비밀번호 찾기용 질문1</label>
@@ -155,26 +163,27 @@
                                     <label for="answer2">비밀번호 찾기용 답변2</label>
                                 </div>
                             </div>
-                            <div class="col s12 center-align">
-                                <div class="container">
-                                    <div class="left-align" style="background-color: #F2F2F2; padding:10px; margin:10px auto; border-radius: 10px;">
-                                        <h5 style="color: #B00020;"><b>잠깐!</b></h5>
-                                        <p style="color: black; font-weight: bold;">닉네임과, 비밀번호 찾기용 질문은 가입후에 비밀번호를 찾을 때, 반드시 기억하고 있어야 합니다.<br />아래의 버튼을 누르기 전에 다시한번 확인해
-                                            주세요!</p>
-                                        <p>
-                                            <label>
-                                                <input type="checkbox" id="agree_checkbox" />
-                                                <span style="color: black;">반드시 기억하겠습니다.</span>
-                                            </label>
-                                        </p>
-                                    </div>
+                            </span>
+                            <div class="row" style="padding:10px; margin: 10px auto;">
+                                <h4 ><b>비밀번호 재설정</b></h4>
+                                <!-- password -->
+                                <p>새로 바꿀 비밀번호를 입력해 주세요.</p>
+                                <div class="input-field col s6">
+                                    <input type="password" id="password" name="PASSWORD" class="validate" placeholder="비밀번호">
+                                    <label for="password">비밀번호</label>
                                 </div>
-                                <a class="btn waves-effect waves-light navyblue" id="signUpBtn">가입하기
+                                <div class="input-field col s6">
+                                    <input id="password_chk" type="password" class="validate" placeholder="비밀번호 확인">
+                                    <label for="password">비밀번호 확인</label>
+                                </div>
+                            </div>
+                            <div class="col s12 center-align">
+                                <a class="btn waves-effect waves-light navyblue" id="pwResetBtn">변경하기
                                     <i class="material-icons right">send</i>
                                 </a>
                             </div>
                         </form>
-                        <!-- 회원가입 폼 끝-->
+                        <!-- 폼 끝-->
                     </div>
                 </div>
             </div>
@@ -217,108 +226,159 @@
     <!--    JS CODE    -->
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$("#nickname_checkBtn").unbind("click").click(function(e) {
-				e.preventDefault();
-				fn_nicknameCheck();
-			});
-			$("#signUpBtn").unbind("click").click(function(e) {
+			$("#pwResetBtn").unbind("click").click(function(e) {
 				e.preventDefault();
 				fn_signUp();
 			});
-/* 			$("#homeBtn").unbind("click").click(function(e) {
-				e.preventDefault();
-				fn_moveToHome();
-			}); */
 		});
 		
-		function fn_nicknameCheck() {
-			var nickname = $("#nickname").val();
-			var userData = { "nickname" : nickname }
-			
-			if (nickname.length < 1) {
-				alert("닉네임을 입력해 주시기 바랍니다.");
-				$("#nickname").focus();
-			} else {
-				$.ajax({
-					type : "POST",
-					url : "/user/nickname",
-					data : userData,
-					dataType : "json",
-					error : function(request, status, error) {
-						alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
-								+ "code: " + request.status + "\n"
-								+ "message: " + request.responseText + "\n"
-								+ "error: " + error);
-					},
-					success : function(result) {
-						if (result == 0) {
-							$("#nickname").attr("disabled", true);
-							$('#nickname').css({
-							    "border-bottom": "1px solid #4CAF50",
-						    	"box-shadow": "0 1px 0 0 #4CAF50"
-							});
-							alert("사용 가능한 닉네임입니다.");
-						}
-						else if (result == 1) {
-							alert('이미 존재하는 닉네임입니다. \n다른 닉네임를 사용해주세요');
-							$('#nickname').css({
-							    "border-bottom": "1px solid #B00020",
-						    	"box-shadow": "0 1px 0 0 #B00020"
-							});
-						}
-						else {
-							alert("에러가 발생했습니다. \n관리자에게 문의바랍니다.");
-						}
-					}
-				});
-			}
-		}
-		
 		function fn_signUp() {
-			if ($("#nickname").val().length < 1) {
-				alert("닉네임을 작성해주세요.");
-				$("#nickname").focus();
-			} else if (!$("#nickname").attr("disabled")) {
-				alert("닉네임 중복체크를 해 주세요.");
-			} else if ($("#password").val().length < 1) {
-				alert("비밀번호를 작성해주세요.");
-				$("#password").focus();
-			} else if ($("#password").val() != $('#password_chk').val()) {
-				alert("비밀번호가 서로 일치하지 않습니다. \n다시 입력해 주세요.");
-				$("#password_chk").focus();
-			} else if ($("#email").val().length < 1) {
-				alert("이메일을 작성해주세요.");
-				$("#email").focus();
-			} else if ($("#op1").val().length < 1) {
-				alert("비밀번호 확인 질문1을 작성해주세요.");
-				$("#op1").focus();
-			} else if ($("#answer1").val().length < 1) {
-				alert("비밀번호 확인 답변1을 작성해주세요.");
-				$("#answer1").focus();
-			} else if ($("#op2").val().length < 1) {
-				alert("비밀번호 확인 질문2를 작성해주세요.");
-				$("#op2").focus();
-			} else if ($("#answer2").val().length < 1) {
-				alert("비밀번호 확인 답변2를 작성해주세요.");
-				$("#answer2").focus();
-			} else if ($("#agree_checkbox").prop("checked") == false) {
-				alert("마지막 당부사항을 반드시 확인해주세요!");
+			if ($("#login").val() == "login") {
+				if ($("#password").val().length < 1) {
+					alert("새로 바꿀 비밀번호를 작성해주세요.");
+					$("#password").focus();
+				} else if ($("#password").val() != $('#password_chk').val()) {
+					alert("비밀번호가 서로 일치하지 않습니다. \n다시 입력해 주세요.");
+					$("#password_chk").focus();
+				} else {
+					if(window.confirm("비밀번호를 변경하시겠습니까?")) {
+						$.ajax({
+							type : "POST",
+							url : "/user/pwReset",
+							data : {
+								"nickname" : $("#nickname").val(),
+								"email" : $("#email").val(),
+								"op1" : $("#op1").val(),
+								"answer1" : $("#answer1").val(),
+								"op2" : $("#op2").val(),
+								"answer2" : $("#answer2").val(),
+								"password" : $("#password").val()
+							},
+							dataType : "json",
+							error : function(request, status, error) {
+								alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+										+ "code: " + request.status + "\n"
+										+ "message: " + request.responseText + "\n"
+										+ "error: " + error);
+							},
+							success : function(result) {
+								if (result == 0) {
+									alert("해당되는 유저가 없습니다. 확인 후 다시 시도해 주세요.");
+									$("#nickname").focus();
+								}
+								else if (result == 1) {
+									alert("유저 정보가 틀립니다. 확인 후 다시 시도해 주세요.");
+								}
+								else {
+									alert("패스워드가 재설정되었습니다!");
+									window.location.href='/user/account';
+								}
+							}
+						});
+					}
+				}
 			} else {
-				if(window.confirm("회원가입을 하시겠습니까?")) {
-					$("#nickname").attr("disabled", false);
-					var form = document.getElementById('frm');
-			         form.setAttribute("method", "POST");
-			         form.setAttribute("action", "/user/signup");
-			         form.submit();
+				if ($("#nickname").val().length < 1) {
+					alert("닉네임을 입력해주세요.");
+					$("#nickname").focus();
+				} else if ($("#email").val().length < 1) {
+					alert("이메일을 입력해주세요.");
+					$("#email").focus();
+				} else if ($("#op1").val().length < 1) {
+					alert("비밀번호 확인 질문1을 입력해주세요.");
+					$("#op1").focus();
+				} else if ($("#answer1").val().length < 1) {
+					alert("비밀번호 확인 답변1을 입력해주세요.");
+					$("#answer1").focus();
+				} else if ($("#op2").val().length < 1) {
+					alert("비밀번호 확인 질문2를 입력해주세요.");
+					$("#op2").focus();
+				} else if ($("#answer2").val().length < 1) {
+					alert("비밀번호 확인 답변2를 입력해주세요.");
+					$("#answer2").focus();
+				} else if ($("#password").val().length < 1) {
+					alert("새로 바꿀 비밀번호를 작성해주세요.");
+					$("#password").focus();
+				} else if ($("#password").val() != $('#password_chk').val()) {
+					alert("비밀번호가 서로 일치하지 않습니다. \n다시 입력해 주세요.");
+					$("#password_chk").focus();
+				} else {
+					if(window.confirm("비밀번호를 변경하시겠습니까?")) {
+						$.ajax({
+							type : "POST",
+							url : "/user/pwReset",
+							data : {
+								"nickname" : $("#nickname").val(),
+								"email" : $("#email").val(),
+								"op1" : $("#op1").val(),
+								"answer1" : $("#answer1").val(),
+								"op2" : $("#op2").val(),
+								"answer2" : $("#answer2").val(),
+								"password" : $("#password").val()
+							},
+							dataType : "json",
+							error : function(request, status, error) {
+								alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+										+ "code: " + request.status + "\n"
+										+ "message: " + request.responseText + "\n"
+										+ "error: " + error);
+							},
+							success : function(result) {
+								if (result == 0) {
+									alert("해당되는 유저가 없습니다. 확인 후 다시 시도해 주세요.");
+									$("#nickname").focus();
+								}
+								else if (result == 1) {
+									alert("유저 정보가 틀립니다. 확인 후 다시 시도해 주세요.");
+								}
+								else {
+									alert("패스워드가 재설정되었습니다!");
+									window.location.href='/user/login';
+								}
+							}
+						});
+					}
 				}
 			}
 		}
 		
-/* 		function fn_moveToHome() {
-			if (window.confirm("메인 화면으로 돌아가시겠습니까?")) {
-				window.location.href="/";
-			}
-		} */
+		// FCM 메시지 설정 코드
+		var messaging = firebase.messaging();
+		messaging.requestPermission()
+		    .then(function(){
+		        console.log('메세징 권한 획득');
+		        return messaging.getToken();
+		    })
+		    .then(function(token){
+		        console.log('fcm token: ', token);
+		        console.log($("#login").val());
+		        if ($("#login").val() == "login") {
+		      	  console.log("토큰 업데이트");
+			          $.ajax({
+		             type: "POST",
+		             url: "/user/token",
+		             dataType: "json",
+		             data: {
+		           	  token : token
+		             },
+				  error : function(request, status, error) {
+					  alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+							  + "code: " + request.status + "\n"
+							  + "message: " + request.responseText + "\n"
+							  + "error: " + error);
+				  },
+		             success: function(result){
+		           	  if(result == 1) {
+		           		  console.log("토큰 업데이트 성공");
+		           	  } else {
+		           		  console.log("토큰 업데이트 불필요");
+		           	  }		              }
+		         });
+		        }
+		    })
+		    .catch(function(e){
+		        console.log('메세징 권한 획득 중 에러', e);
+		    });
 	</script>
 </body>
 </html>

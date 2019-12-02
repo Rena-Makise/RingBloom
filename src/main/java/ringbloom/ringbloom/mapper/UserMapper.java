@@ -19,4 +19,8 @@ public interface UserMapper {
 	UserDto checkLogin(@Param("nickname") String nickname, @Param("password") String password) throws Exception;
 	String checkTokenUser(@Param("token") String token) throws Exception;
 	void updateToken(@Param("nickname") String nickname, @Param("token") String token) throws Exception;
+	UserDto checkUserInfo(@Param("nickname") String nickname) throws Exception;
+	void updatePassword(@Param("password") String password, @Param("nickname") String nickname) throws Exception;
+	int checkPostNum(@Param("nickname") String nickname) throws Exception;
+	int checkCommentNum(@Param("nickname") String nickname) throws Exception;
 }

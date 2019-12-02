@@ -31,7 +31,8 @@
 				B.hit_cnt,
 				B.created_datetime,
 				B.creator_id,
-				B.comment_cnt
+				B.comment_cnt,
+				B.file_cnt
 			FROM
 			(
 				SELECT
@@ -41,7 +42,8 @@
 					A.hit_cnt,
 					A.created_datetime,
 					A.creator_id,
-					A.comment_cnt
+					A.comment_cnt,
+					A.file_cnt
 				FROM
 			    (
 					SELECT
@@ -50,7 +52,8 @@
 						hit_cnt,
 						created_datetime,
 						creator_id,
-						(SELECT COUNT(*) FROM t_comment WHERE t_comment.board_idx = t_board.board_idx) AS comment_cnt
+						(SELECT COUNT(*) FROM t_comment WHERE t_comment.board_idx = t_board.board_idx) AS comment_cnt,
+						(SELECT COUNT(*) FROM t_file WHERE t_file.board_idx = t_board.board_idx AND deleted_yn = 'N') AS file_cnt
 					FROM 
 			        	t_board
 					WHERE
@@ -148,6 +151,7 @@
 				AND deleted_yn = 'N'
 		]]>
 	</select>
+	
 	<select id="selectBoardDetail" parameterType="int" resultType="ringbloom.ringbloom.dto.BoardDto">
 		<![CDATA[
 			SELECT

@@ -47,6 +47,13 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 				} else {
 					return true;
 				}
+			} else if (request.getRequestURI().contains("/user/account")) {
+				if (request.getSession().getAttribute("nickname") == null) {
+					response.sendRedirect("/user/needLogin");
+					return false;
+				} else {
+					return true;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

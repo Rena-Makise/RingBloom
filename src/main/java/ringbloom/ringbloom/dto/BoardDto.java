@@ -48,4 +48,7 @@ public class BoardDto {
 	
 	@ApiModelProperty(value = "댓글갯수")
 	private int commentCnt;
+	
+	@ApiModelProperty(value = "파일갯수")
+	private int fileCnt;
 }

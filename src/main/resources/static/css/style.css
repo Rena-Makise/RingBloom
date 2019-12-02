@@ -2,17 +2,177 @@
 
 nav ul a,
 nav .brand-logo {
-  color: #444;
+  color: #E2E2E2;
 }
 
 p {
   line-height: 2rem;
 }
 
-.sidenav-trigger {
-  color: #26a69a;
+div.row{
+    margin-top : 0px !important;
+    margin-bottom: 0px
 }
 
+/* label focus color */
+.input-field input[type=text]:focus + label {
+  color: #0078D7 !important;
+}
+
+
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #0078D7 !important;
+  box-shadow: 0 1px 0 0 #0078D7 !important;
+}
+
+
+/* label focus color */
+.input-field input[type=password]:focus + label {
+  color: #0078D7 !important;
+}
+
+
+/* label underline focus color */
+.input-field input[type=password]:focus {
+  border-bottom: 1px solid #0078D7 !important;
+  box-shadow: 0 1px 0 0 #0078D7 !important;
+}
+
+
+/* 기본 컨텐츠 본문 */
+#index_01 {
+    min-height: 650px;
+    position: relative;
+
+}
+
+.h-100{
+    top:0;
+    bottom:0;
+    display: absolute !important;
+    min-height: 105vh !important;
+}
+
+/* 하단 card관련 css */
+.card {
+    height: 360px;
+    background-color: #1D1D1D;
+}
+.cardfooter {
+    position: absolute;
+    width: 100%;
+    bottom: 24px;
+    color: #0063B1; margin-right: 0px;
+}
+.contenttxt {
+    font-size: 14px;
+    padding-top: 8px;
+    line-height: 18px;
+    text-align: center;
+}
+.contentsubtit {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 15px;
+}
+.contentplus {
+    padding-top: 30px;
+    padding-right: 24px;
+    padding-bottom: 30px;
+    padding-left: 24px;
+    height: 100%;
+    display: block;
+    border-radius: 0 0 2px 2px;
+}
+.cardimg {
+    max-width: 100%;
+    width: 120px;
+}
+.innerinfo {
+    padding-top: 12px;
+}
+.innerheader {
+    margin: 8px 0 12px;
+}
+
+.hoverable:hover {
+    -webkit-box-shadow: 0 8px 17px 0 rgba(100, 100, 100, 0.2), 0 6px 20px 0 rgba(100, 100, 100, 0.19);
+    box-shadow: 0 8px 17px 0 rgba(100, 100, 100, 0.2), 0 6px 20px 0 rgba(100, 100, 100, 0.19);
+}
+
+/* 글자 그림자 */
+.sd { text-shadow: 4px 2px 2px rgb(51,51,51); }
+
+
+/* 네이비 블루 */
+.navyblue {
+	background-color : #0063B1 !important;
+}
+
+
+/* 다크모드 본문 */
+.darkmode {
+	background-color : #121212;
+	color : #E2E2E2;
+}
+
+
+/* 다크모드 디폴트 폰트색 */
+.darkmode-text {
+	color : #E2E2E2 !important;
+}
+
+
+/* 다크모드 nav 색 */
+.nav-darken {
+	background-color : #1F1F1F !important;
+}
+
+
+/* 다크모드 footer 색 */
+.footer-darken {
+	background-color : #212121 !important;
+}
+
+
+/* 다크모드 dropdown 색 */
+.dropdown-darken {
+	background-color : #2D2D2D;
+}
+
+
+/* 다크모드 sidenav 색 */
+.sidenav-darken {
+	background-color : #2D2D2D;
+}
+
+
+/* 다크모드 divider 색 */
+.divider-darken {
+	background-color : #909090 !important;
+}
+
+
+/* 다크모드 icon 색 */
+.icon-darken {
+	color : #B0B0B0 !important;
+}
+
+
+/* 다크모드 사이드바 폰트색 */
+.sidenav-text {
+	color : #FFFFFF !important;
+}
+
+
+/* 다크모드 햄버거메뉴 색 */
+.sidenav-trigger {
+  color: #E2E2E2;
+}
+
+
+/* 메인화면 관련 설정 */
 .parallax-container {
   min-height: 380px;
   line-height: 0;
@@ -48,5 +208,101 @@ p {
 
 footer.page-footer {
   margin: 0;
+}
+
+
+/* 다크모드 입력폼 색 */
+input {
+  color: #E2E2E2 !important;
+}
+textarea {
+  color: #E2E2E2 !important;
+}
+
+input::placeholder {
+  color: #909090 !important;
+}
+textarea::placeholder {
+  color: #909090 !important;
+}
+
+input::-webkit-input-placeholder {
+  color: #909090 !important;
+}
+input:-ms-input-placeholder {
+  color: #909090 !important;
+}
+textarea::-webkit-input-placeholder {
+  color: #909090 !important;
+}
+textarea:-ms-input-placeholder {
+  color: #909090 !important;
+}
+
+
+/* 상단 배너관련 css */
+.ac-banner {
+    background: linear-gradient(to bottom,#000C24 0,#001027);
+    box-shadow: 0 12px 45px -8px #000C24;
+}
+.sub-banner {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+.acinfo {
+    margin-top: 14px;
+}
+.sbinfo{
+    margin-top: 14px;
+}
+.userinfo {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: #E2E2E2;
+}
+.midinfo {
+    font-size: 15px;
+}
+.subinfo {
+    color: #E2E2E2;
+    font-size: 13px;
+}
+
+@media screen and (min-width: 768px) {
+    .acinfo {
+        margin-bottom: 38px;
+    }
+    .acminfo {
+        margin-bottom: 38px;
+    }
+    .sub-banner {
+        padding-bottom: 2px;
+    }
+}
+
+@media screen and (min-width: 540px) {
+    .acinfo {
+        margin-bottom: 30px;
+    }
+    .acminfo {
+        margin-bottom: 30px;
+    }
+    .sub-banner {
+        padding-bottom: 10px;
+    }
+    #parallel_wrap {
+        min-height: 100vh;
+    }
+}
+@media screen and (max-width: 539px) {
+    .acinfo {
+        margin-bottom: 40px;
+    }
+    .acminfo {
+        margin-bottom: 40px;
+    }
+    .sub-banner {
+        padding-bottom: 0px;
+    }
 }
 

@@ -26,7 +26,7 @@ public interface BoardMapper {
 	void deleteBoard(int boardIdx) throws Exception;
 	void insertBoardFileList(List<BoardFileDto> list) throws Exception;
 	List<BoardFileDto> selectBoardFileList(int boardIdx) throws Exception;
-	BoardFileDto selectBoardFileInformation(@Param("idx") int idx, @Param("boarddx") int boardIdx);
+	BoardFileDto selectBoardFileInformation(@Param("idx") int idx, @Param("boardIdx") int boardIdx);
 	List<ReplyDto> selectCommentList(@Param("boardIdx") int boardIdx, @Param("start") int start, @Param("end") int end) throws Exception;
 	void insertComment(ReplyDto reply) throws Exception;
 	int commentListGetCount(@Param("boardIdx") int boardIdx) throws Exception;

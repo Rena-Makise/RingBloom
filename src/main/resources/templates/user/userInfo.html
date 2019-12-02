@@ -1,15 +1,228 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>로그인 성공</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>RingBloom</title>
+  <!--    JQuery GOOGLE CDN    -->
+ <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--    MATRIALIZE CSS    -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link th:href="@{/css/materialize.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <!--    MATRIALIZE JS    -->
+  <script src="/js/materialize.js"></script>
+  <!--    BASE CSS FOR GENERAL    -->
+  <link th:href="@{/css/style.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <!-- Firebase API -->
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js"></script>
+  <!--    BASE JS FOR GENERAL    -->
+  <script src="/js/init.js"></script>
+  <!--    Prograssive Web App     -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" href="/icons/favicon.ico">
+  <link rel="apple-touch-icon" sizes="57x57" href="/icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+  <meta name="msapplication-TileColor" content="#3344AA">
+  <meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
+  <meta name="theme-color" content="#3344AA">
+  <script src="/pwabuilder-sw-register.js"></script>
 </head>
-<body>
-    <h1>로그인 성공!!</h1>
-    <hr>
-    <p>
-        <span sec:authentication="name"></span>님 환영합니다~
-    </p>
-    <a th:href="@{'/'}">메인으로 이동</a>
+<body class="darkmode">
+	<!-- Dropdown Structure -->
+	<ul id="dropdown1" class="dropdown-content dropdown-darken z-depth-3">
+		<li><a class="waves-effect darkmode-text" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+	    <li class="divider divider-darken"></li>
+	    <li><a class="waves-effect darkmode-text" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	</ul>
+    <!--   NAVIGATION BAR     -->
+	<nav class="nav-darken" role="navigation">
+	  <div class="nav-wrapper container">
+	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
+	    <ul class="right hide-on-med-and-down">
+      	  <li><a href="/board">게시판</a></li>
+          <li>
+	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
+	              <span th:text="${nickname}">
+	              </span>
+	              <i class="material-icons right">arrow_drop_down</i>
+	          </a>
+          </li>
+	    </ul>
+	
+		 <ul id="nav-mobile" class="sidenav sidenav-darken">
+			 <li>
+				<div class="user-view">
+					<div class="background">
+					  <img src="/images/sidepic.jpg">
+					</div>
+					<a href="#user"><i class="medium material-icons"></i></a>
+					<a href="#name">
+						<span class="white-text name" th:text="${nickname}"></span>
+						<input type="hidden" id="login" name="login" th:value="${login}"> 
+					</a>
+					<a href="#email">
+						<span class="white-text email" th:text="${email}"></span>
+					</a>
+				</div>
+			 </li>
+			 <li><a class="subheader darkmode-text">RingBloom</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/"><i class="material-icons icon-darken">home</i>홈</a></li>
+		 	 <li><a class="waves-effect sidenav-text" href="/board"><i class="material-icons icon-darken">forum</i>게시판</a></li>
+	         <li>
+	             <div class="divider divider-darken"></div>
+	         </li>
+	         <li><a class="subheader darkmode-text">User</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/user/logout" id="logoutBtn"><i class="material-icons icon-darken">exit_to_app</i>로그아웃</a></li>
+		     <li><a class="waves-effect sidenav-text" href="/user/account"><i class="material-icons icon-darken">settings</i>내 계정</a></li>
+		</ul>
+	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+	  </div>
+	</nav>
+	<!--    CONTENT START    -->
+    <div id="index_01" class="row h-100" style="margin-bottom: 100px;">
+        <div class="ac-banner darkmode-text col-12">
+            <div class="row sub-banner">
+                <div class="container">
+                    <div class="col s12 m6 acinfo">
+                        <h4 class="userinfo"><b th:text="${nickname}"></b></h4>
+                        <p class="userinfo subinfo" th:text="${email}"></p>
+                        <p class="userinfo subinfo" th:text="'유저번호 : ' + ${pid}"></p>
+                    </div>
+                    <div class="col s12 m6 sbinfo">
+                        <div class="row">
+                            <div class="col s12 m6 acminfo">
+                                <p class="userinfo midinfo"><i class="material-icons">list_alt</i><br/><b>작성 게시글수</b></p>
+                                <p class="userinfo subinfo" th:text="${postNum}"></p>
+                            </div>
+                            <div class="col s12 m6 acminfo">
+                                <p class="userinfo midinfo"><i class="material-icons">chat</i><br/><b>작성 댓글수</b></p>
+                                <p class="userinfo subinfo" th:text="${commentNum}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row h-100">
+            <div class="container">
+                <div class="innerinfo">
+                    <div class="col s12 m4">
+                        <h6 class="innerheader"><b>Security</b></h6>
+                        <div class="card hoverable">
+                            <div class="contentplus">
+                                <div class="center"><img id="security" class="cardimg" src="/images/security.png" /></div>
+                                <div class="center contentsubtit"><b>비밀번호 업데이트</b></div>
+                                <div class="contenttxt">암호를 잊어버렸거나 해킹이 의심되는 경우 최신정보로 업데이트해주세요!</div>
+                            </div>
+                            <div class="cardfooter center">
+                                <a href="/user/pwReset" style="color: #0067b8; margin-right: 0px;"><b>업데이트&nbsp;〉</b></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col s12 m4">
+                        <h6 class="innerheader"><b>Coming Soon</b></h6>
+                        <div class="card hoverable">
+                            <div class="contentplus">
+                                <div class="center"><img id="borken" class="cardimg" src="/images/develop.png" /></div>
+                                <div class="center contentsubtit"><b>Coming Soon!</b></div>
+                                <div class="contenttxt">여러분들을 위한 더 많은 서비스를 개발하고 있습니다. 조만간 찾아갑니다!</div>
+                            </div>
+                            <div class="cardfooter center"><b>Coming Soon</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="page-footer footer-darken">
+      <div class="container">
+        <div class="row">
+          <div class="col l6 s12">
+            <h5 class="white-text">Company Bio</h5>
+            <p class="grey-text text-lighten-4">I am a college student working on this project like it's my full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+          </div>
+          <div class="col l3 s12">
+            <h5 class="white-text">Settings</h5>
+            <ul>
+              <li><a class="white-text" href="#!">Link 1</a></li>
+              <li><a class="white-text" href="#!">Link 2</a></li>
+              <li><a class="white-text" href="#!">Link 3</a></li>
+              <li><a class="white-text" href="#!">Link 4</a></li>
+            </ul>
+          </div>
+          <div class="col l3 s12">
+            <h5 class="white-text">Connect</h5>
+            <ul>
+              <li><a class="white-text" href="#!">Link 1</a></li>
+              <li><a class="white-text" href="#!">Link 2</a></li>
+              <li><a class="white-text" href="#!">Link 3</a></li>
+              <li><a class="white-text" href="#!">Link 4</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-copyright">
+        <div class="container">
+        	Made by <a class="brown-text text-lighten-3" href="https://github.com/Rena-Makise">Rena Makise</a>
+        </div>
+      </div>
+    </footer>
+    <!--    CONTENT END    -->
+    <!--    JS CODE    -->
+    <script type="text/javascript">
+		$(document).ready(function(){
+
+		});
+
+		// FCM 메시지 설정 코드
+		var messaging = firebase.messaging();
+		messaging.requestPermission()
+		    .then(function(){
+		        console.log('메세징 권한 획득');
+		        return messaging.getToken();
+		    })
+		    .then(function(token){
+		        console.log('fcm token: ', token);
+		      	console.log("토큰 업데이트");
+		        $.ajax({
+		             type: "POST",
+		             url: "/user/token",
+		             dataType: "json",
+		             data: {
+		           	 	token : token
+		             },
+					 error : function(request, status, error) {
+						  alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+								  + "code: " + request.status + "\n"
+								  + "message: " + request.responseText + "\n"
+								  + "error: " + error);
+					 },
+		             success: function(result){
+			           	  if(result == 1) {
+			           		  console.log("토큰 업데이트 성공");
+			           	  } else {
+			           		  console.log("토큰 업데이트 불필요");
+			           	  }		              
+		           	 }
+		        });
+		    })
+		    .catch(function(e){
+		        console.log('메세징 권한 획득 중 에러', e);
+		    });
+    </script>
 </body>
 </html>

@@ -36,24 +36,24 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <meta name="msapplication-TileColor" content="#181818">
+  <meta name="msapplication-TileColor" content="#3344AA">
   <meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#181818">
+  <meta name="theme-color" content="#3344AA">
   <script src="/pwabuilder-sw-register.js"></script>
 </head>
-<body>
+<body class="darkmode">
 	<!-- Dropdown Structure -->
-	<ul id="dropdown1" class="dropdown-content">
-		<li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-	    <li class="divider"></li>
-	    <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	<ul id="dropdown1" class="dropdown-content dropdown-darken z-depth-3">
+		<li><a class="waves-effect darkmode-text" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+	    <li class="divider divider-darken"></li>
+	    <li><a class="waves-effect darkmode-text" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
 	</ul>
     <!--   NAVIGATION BAR     -->
-	<nav class="white" role="navigation">
+	<nav class="nav-darken" role="navigation">
 	  <div class="nav-wrapper container">
 	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
 	    <ul class="right hide-on-med-and-down">
-	      <li><a href="/board">게시판</a></li>
+      	  <li><a href="/board">게시판</a></li>
           <li>
 	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
 	              <span th:text="${nickname}">
@@ -63,11 +63,11 @@
           </li>
 	    </ul>
 	
-		 <ul id="nav-mobile" class="sidenav">
+		 <ul id="nav-mobile" class="sidenav sidenav-darken">
 			 <li>
 				<div class="user-view">
 					<div class="background">
-					  <img src="/images/office.jpg">
+					  <img src="/images/sidepic.jpg">
 					</div>
 					<a href="#user"><i class="medium material-icons"></i></a>
 					<a href="#name">
@@ -79,93 +79,105 @@
 					</a>
 				</div>
 			 </li>
-			 <li><a class="subheader">RingBloom</a></li>
-			 <li><a class="waves-effect" href="/"><i class="material-icons">home</i>홈</a></li>
-		 	<li><a class="waves-effect" href="/board"><i class="material-icons">forum</i>게시판</a></li>
+			 <li><a class="subheader darkmode-text">RingBloom</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/"><i class="material-icons icon-darken">home</i>홈</a></li>
+		 	 <li><a class="waves-effect sidenav-text" href="/board"><i class="material-icons icon-darken">forum</i>게시판</a></li>
 	         <li>
-	             <div class="divider"></div>
+	             <div class="divider divider-darken"></div>
 	         </li>
-	         <li><a class="subheader">User</a></li>
-			 <li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-		     <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	         <li><a class="subheader darkmode-text">User</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/user/logout" id="logoutBtn"><i class="material-icons icon-darken">exit_to_app</i>로그아웃</a></li>
+		     <li><a class="waves-effect sidenav-text" href="/user/account"><i class="material-icons icon-darken">settings</i>내 계정</a></li>
 		</ul>
 	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 	  </div>
 	</nav>
-	
-    <div class="container">
-    	<h2>게시글 목록</h2>
-    	<div><p th:text="|${count}개의 게시물이 있습니다.|"></p></div>
-    	<div>
-    		<select name="searchType" id="select_searchType">
-    			<option id="title" value="TITLE">제목</option>
-    			<option id="nickname" value="NICKNAME">글쓴이</option>
-    		</select>
-    		<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}" onkeyup="enterkey();">
-			<input type="hidden" id="searchTypeHidden" name="searchTypeHidden" th:value="${searchType}">
-    		<a href="javascript:fn_searchList()" class="btn">검색</a> 
-    	</div>
-    	<table class="board_list">
-	        <colgroup>
-	            <col width="15%"/>
-	            <col width="*"/>
-	            <col width="15%"/>
-	            <col width="15%"/>
-	            <col width="20%"/>
-	        </colgroup>
-	        <thead>
-	            <tr>
-	                <th scope="col">글번호</th>
-	                <th scope="col">제목</th>
-	                <th scope="col">조회수</th>
-	                <th scope="col">작성자</th>
-	                <th scope="col">작성일</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
-	        		<td th:text="${list.boardIdx}"></td>
-	        		<!-- 여기 -->
-	        		<td class="title"><a href="/board/" th:attrappend="href=${paging.curPage} + '/' + ${list.boardIdx} + '?searchType=' + ${searchType} + '&searchWord=' + ${searchWord}" th:text="${list.title}"></a><span th:text="'   [' + ${list.commentCnt} +']'"></span></td>
-	        		<td th:text="${list.hitCnt}"></td>
-	        		<td th:text="${list.creatorId}"></td>
-	        		<td th:text="${#temporals.format(list.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
-	        	</tr> 
-	        	<tr th:unless="${#lists.size(list)} > 0">
-	        		<td colspan="4">조회된 결과가 없습니다.</td>
-	        	</tr>
-	        </tbody>
-	    </table>
-	    <div style="text-align: center;">
-	    	<ul class="pagination" th:with="start=${paging.pageBegin}, end=${paging.pageEnd}">
-	    		<li th:class="${paging.curPage == 1} ? 'disabled' : 'waves-effect'">
-	    			<a th:href="${paging.curPage == 1} ? '#' : @{/board/1}"><i class="material-icons">first_page</i></a>
-	    		</li>
-	    		<li th:class="${paging.curBlock == 1} ? 'disabled' : 'waves-effect'">
-	    			<a th:href="${paging.curBlock == 1} ? '#' : @{'/board/' + ${paging.prevPage}}"><i class="material-icons">chevron_left</i></a>
-	    		</li>
-	    		<li th:each="page: ${#numbers.sequence(start, end)}" th:class="${page == paging.curPage} ? 'active' : 'waves-effect'">
-	    			<a href="/board/" th:attrappend="href=${page}" th:text="${page}"></a>
-	    		</li>
-	    		<li th:class="${paging.curBlock eq paging.totalBlock} ? 'disabled' : 'waves-effect'">
-	    			<a th:href="${paging.curBlock eq paging.totalBlock} ? '#' : @{'/board/' + ${paging.nextPage}}"><i class="material-icons">chevron_right</i></a>
-	    		</li>
-	    		<li th:class="${paging.curPage eq paging.totalPage} ? 'disabled' : 'waves-effect'">
-	    			<a th:href="${paging.curPage eq paging.totalPage} ? '#' : @{'/board/' + ${paging.totalPage}}"><i class="material-icons">last_page</i></a>
-	    		</li>
-	    	</ul>
+	<!--    CONTENT START    -->
+    <div id="index_01" class="row h-100">
+        <div class="ac-banner white-text col-12">
+            <div class="row sub-banner">
+                <div class="container">
+                    <div class="col s12 m6 acinfo">
+                        <h4 class="userinfo"><b>게시글 목록</b></h4>
+                        <p class="userinfo subinfo" th:text="|${count}개의 게시물이 있습니다.|"></p>
+                    </div>
+                    <div class="col s12 m6 sbinfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row h-100">
+        	<div class="container">
+		    	<div>
+		    		<select name="searchType" id="select_searchType">
+		    			<option id="title" value="TITLE">제목</option>
+		    			<option id="nickname" value="NICKNAME">글쓴이</option>
+		    		</select>
+		    		<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}" onkeyup="enterkey();">
+					<input type="hidden" id="searchTypeHidden" name="searchTypeHidden" th:value="${searchType}">
+		    		<a href="javascript:fn_searchList()" class="btn">검색</a> 
+		    	</div>
+		    	<table class="board_list">
+			        <colgroup>
+			            <col width="15%"/>
+			            <col width="*"/>
+			            <col width="15%"/>
+			            <col width="15%"/>
+			            <col width="20%"/>
+			        </colgroup>
+			        <thead>
+			            <tr>
+			                <th scope="col">글번호</th>
+			                <th scope="col">제목</th>
+			                <th scope="col">조회수</th>
+			                <th scope="col">작성자</th>
+			                <th scope="col">작성일</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+			        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
+			        		<td th:text="${list.boardIdx}"></td>
+			        		<!-- 여기 -->
+			        		<td class="title"><a href="/board/" th:attrappend="href=${paging.curPage} + '/' + ${list.boardIdx} + '?searchType=' + ${searchType} + '&searchWord=' + ${searchWord}" th:text="${list.title}"></a><span th:text="'   [' + ${list.commentCnt} +']'"></span><span th:if="${list.fileCnt != 0}">&nbsp;&nbsp;&nbsp;&nbsp;<i class="material-icons" style="font-size: 15px;">attach_file</i></span></td>
+			        		<td th:text="${list.hitCnt}"></td>
+			        		<td th:text="${list.creatorId}"></td>
+			        		<td th:text="${#temporals.format(list.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
+			        	</tr> 
+			        	<tr th:unless="${#lists.size(list)} > 0"
+			        		<td colspan="4">조회된 결과가 없습니다.</td>
+			        	</tr>
+			        </tbody>
+			    </table>
+			    <div style="text-align: center;">
+			    	<ul class="pagination" th:with="start=${paging.pageBegin}, end=${paging.pageEnd}">
+			    		<li th:class="${paging.curPage == 1} ? 'disabled' : 'waves-effect'">
+			    			<a th:href="${paging.curPage == 1} ? '#' : @{/board/1}"><i class="material-icons">first_page</i></a>
+			    		</li>
+			    		<li th:class="${paging.curBlock == 1} ? 'disabled' : 'waves-effect'">
+			    			<a th:href="${paging.curBlock == 1} ? '#' : @{'/board/' + ${paging.prevPage}}"><i class="material-icons">chevron_left</i></a>
+			    		</li>
+			    		<li th:each="page: ${#numbers.sequence(start, end)}" th:class="${page == paging.curPage} ? 'active' : 'waves-effect'">
+			    			<a href="/board/" th:attrappend="href=${page}" th:text="${page}"></a>
+			    		</li>
+			    		<li th:class="${paging.curBlock eq paging.totalBlock} ? 'disabled' : 'waves-effect'">
+			    			<a th:href="${paging.curBlock eq paging.totalBlock} ? '#' : @{'/board/' + ${paging.nextPage}}"><i class="material-icons">chevron_right</i></a>
+			    		</li>
+			    		<li th:class="${paging.curPage eq paging.totalPage} ? 'disabled' : 'waves-effect'">
+			    			<a th:href="${paging.curPage eq paging.totalPage} ? '#' : @{'/board/' + ${paging.totalPage}}"><i class="material-icons">last_page</i></a>
+			    		</li>
+			    	</ul>
+			    </div>
+			    <!-- 여기 -->
+			    <a href="/board/write" class="btn">글 쓰기</a>
+		    </div>
 	    </div>
-	    <!-- 여기 -->
-	    <a href="/board/write" class="btn">글 쓰기</a>
     </div>
-    <footer class="page-footer teal">
+    <footer class="page-footer footer-darken">
       <div class="container">
         <div class="row">
           <div class="col l6 s12">
             <h5 class="white-text">Company Bio</h5>
-            <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
+            <p class="grey-text text-lighten-4">I am a college student working on this project like it's my full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
           </div>
           <div class="col l3 s12">
             <h5 class="white-text">Settings</h5>
@@ -189,10 +201,12 @@
       </div>
       <div class="footer-copyright">
         <div class="container">
-        	Made by <a class="brown-text text-lighten-3" href="">Rena Makise</a>
+        	Made by <a class="brown-text text-lighten-3" href="https://github.com/Rena-Makise">Rena Makise</a>
         </div>
       </div>
     </footer>
+    <!--    CONTENT END    -->
+    <!--    JS CODE    -->
     <script type="text/javascript">
 		$(document).ready(function(){
 			var searchTypeHidden = $("#searchTypeHidden").val();

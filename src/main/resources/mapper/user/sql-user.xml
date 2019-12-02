@@ -41,6 +41,7 @@
 	<select id="checkLogin" parameterType="map" resultType="ringbloom.ringbloom.dto.UserDto">
 		<![CDATA[
 			SELECT
+				pid,
 				nickname, 
 				email,
 				password, 
@@ -76,4 +77,52 @@
 				nickname = #{nickname}
 		]]>
 	</update>
+	<select id="checkUserInfo" parameterType="map" resultType="ringbloom.ringbloom.dto.UserDto">
+		<![CDATA[
+			SELECT
+				nickname, 
+				email,
+				password, 
+				op1,
+				op2,
+				answer1,
+				answer2,
+				token
+			FROM
+				t_user
+			WHERE
+				nickname = #{nickname}
+		]]>
+	</select>
+	<update id="updatePassword" parameterType="map">
+		<![CDATA[
+			UPDATE 
+				t_user 
+			SET 
+				password = #{password}
+			WHERE 
+				nickname = #{nickname}
+		]]>
+	</update>
+	<select id="checkPostNum" parameterType="map" resultType="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) AS post_num
+			FROM 
+				t_board
+			WHERE
+				creator_id = #{nickname}
+				AND deleted_yn = 'N'
+		]]>
+	</select>
+	<select id="checkCommentNum" parameterType="map" resultType="int">
+		<![CDATA[
+			SELECT 
+				COUNT(*) AS comment_num
+			FROM 
+				t_comment
+			WHERE
+				creator_id = #{nickname}
+		]]>
+	</select>
 </mapper>

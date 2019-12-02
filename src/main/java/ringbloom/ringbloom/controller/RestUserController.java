@@ -45,8 +45,7 @@ public class RestUserController {
 	
 	@ApiOperation(value = "회원가입 처리")
 	@RequestMapping(value = "/user/signup", method = RequestMethod.POST)
-	public ModelAndView execSignUp(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("redirect:/user/login");
+	public void execSignUp(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		UserDto userDto = new UserDto();
 		SecurityUtil securityUtil = new SecurityUtil();
 		Encoder encoder = Base64.getEncoder();
@@ -58,10 +57,11 @@ public class RestUserController {
 		userDto.setOp2(encoder.encodeToString(request.getParameter("OP2").getBytes("UTF-8")));
 		userDto.setAnswer2(encoder.encodeToString(request.getParameter("ANSWER2").getBytes("UTF-8")));
 		userService.signUp(userDto);
-		
-		mv.addObject("message", "회원가입이 완료되었습니다.");
 
-		return mv;
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		out.println("<script>alert('회원가입이 완료되었습니다!'); window.location.href='/user/login';</script>");
+		out.flush();
 	}
 	
 	@ApiOperation(value = "닉네임 중복 체크")
@@ -108,6 +108,7 @@ public class RestUserController {
 		String password = securityUtil.encryptSHA256(request.getParameter("password"));
 		UserDto user = userService.checkLogin(nickname, password);
 		if (user != null) {
+			request.getSession().setAttribute("pid", user.getPid());
 			request.getSession().setAttribute("nickname", user.getNickname());
 			request.getSession().setAttribute("email", user.getEmail());
 			request.getSession().setAttribute("token", user.getToken());
@@ -125,6 +126,7 @@ public class RestUserController {
 	@RequestMapping(value = "/user/logout", method = RequestMethod.GET)
 	public void execLogout(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		userService.updateToken(request.getSession().getAttribute("nickname").toString(), "");
+		request.getSession().removeAttribute("pid");
 		request.getSession().removeAttribute("nickname");
 		request.getSession().removeAttribute("email");
 		request.getSession().removeAttribute("token");
@@ -142,14 +144,78 @@ public class RestUserController {
 	
 	@ApiOperation(value = "유저정보 화면")
 	@RequestMapping(value = "/user/account", method = RequestMethod.GET)
-	public String openUserInfo() throws Exception {
-		return "/user/userInfo";
+	public ModelAndView openUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("/user/userInfo");
+		String nickname = request.getSession().getAttribute("nickname").toString();
+		mv.addObject("pid", request.getSession().getAttribute("pid"));
+		mv.addObject("nickname", request.getSession().getAttribute("nickname"));
+		mv.addObject("email", request.getSession().getAttribute("email"));
+		mv.addObject("postNum", userService.checkPostNum(nickname));
+		mv.addObject("commentNum", userService.checkCommentNum(nickname));
+		return mv;
 	}
 	
 	@ApiOperation(value = "관리자 화면")
 	@RequestMapping(value = "/user/admin", method = RequestMethod.GET)
 	public String openAdmin() throws Exception {
 		return "/user/admin";
+	}
+	
+	@ApiOperation(value = "패스워드 재설정 화면")
+	@RequestMapping(value = "/user/pwReset", method = RequestMethod.GET)
+	public ModelAndView openPwReset(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ModelAndView mv = new ModelAndView("/user/pwReset");
+		if (request.getSession().getAttribute("nickname") != null) {
+			mv.addObject("nickname", request.getSession().getAttribute("nickname"));
+			mv.addObject("login", "login");
+			mv.addObject("email", request.getSession().getAttribute("email"));
+		} else {
+			mv.addObject("nickname", "Guest");
+			mv.addObject("login", "need");
+			mv.addObject("email", "");
+		}
+		return mv;
+	}
+	
+	@ApiOperation(value = "패스워드 재설정 처리")
+	@RequestMapping(value = "/user/pwReset", method = RequestMethod.POST)
+	@ResponseBody
+	public int execPwReset(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(value="nickname", required=false) String nickname,
+			@RequestParam(value="email", required=false) String email,
+			@RequestParam(value="op1", required=false) String op1,
+			@RequestParam(value="answer1", required=false) String answer1,
+			@RequestParam(value="op2", required=false) String op2,
+			@RequestParam(value="answer2", required=false) String answer2,
+			@RequestParam(value="password") String password) throws Exception {
+		SecurityUtil securityUtil = new SecurityUtil();
+		Encoder encoder = Base64.getEncoder();
+		String enpassword = securityUtil.encryptSHA256(password);
+		
+		//return 0 : 아이디 없음, 1 : 정보 틀림, 2 : 재설정 성공
+		if (request.getSession().getAttribute("nickname") == null) {
+			String enop1 = encoder.encodeToString(op1.getBytes("UTF-8"));
+			String enanswer1 = encoder.encodeToString(answer1.getBytes("UTF-8"));
+			String enop2 = encoder.encodeToString(op2.getBytes("UTF-8"));
+			String enanswer2 = encoder.encodeToString(answer2.getBytes("UTF-8"));
+			UserDto userDto = userService.checkUserInfo(nickname);
+			
+			if (userDto == null) {
+				return 0;
+			} else {
+				if (email.equals(userDto.getEmail()) && 
+						enop1.equals(userDto.getOp1()) && enanswer1.equals(userDto.getAnswer1()) && 
+						enop2.equals(userDto.getOp2()) && enanswer2.equals(userDto.getAnswer2())) {
+					userService.updatePassword(enpassword, nickname);
+					return 2;
+				} else {
+					return 1;
+				}
+			}
+		} else {
+			userService.updatePassword(enpassword, request.getSession().getAttribute("nickname").toString());
+			return 2;
+		}
 	}
 	
 	@ApiOperation(value = "토큰정보 업데이트")

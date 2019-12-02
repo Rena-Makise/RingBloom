@@ -36,26 +36,26 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <meta name="msapplication-TileColor" content="#181818">
+  <meta name="msapplication-TileColor" content="#3344AA">
   <meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#181818">
+  <meta name="theme-color" content="#3344AA">
   <script src="/pwabuilder-sw-register.js"></script>
 </head>
-<body>
+<body class="darkmode">
 	<!-- Dropdown Structure -->
-	<ul id="dropdown1" class="dropdown-content">
+	<ul id="dropdown1" class="dropdown-content dropdown-darken z-depth-3">
 		<span th:if="${login eq 'login'}">
-			<li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-		    <li class="divider"></li>
-		    <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+			<li><a class="waves-effect darkmode-text" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+		    <li class="divider divider-darken"></li>
+		    <li><a class="waves-effect darkmode-text" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
 	    </span>
 		<span th:unless="${login eq 'login'}">
-		    <li><a class="waves-effect" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
-		    <li><a class="waves-effect" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+		    <li><a class="waves-effect darkmode-text" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
+		    <li><a class="waves-effect darkmode-text" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
 		</span>
 	</ul>
     <!--   NAVIGATION BAR     -->
-	<nav class="white" role="navigation">
+	<nav class="nav-darken" role="navigation">
 	  <div class="nav-wrapper container">
 	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
 	    <ul class="right hide-on-med-and-down">
@@ -71,11 +71,11 @@
           </li>
 	    </ul>
 	
-		 <ul id="nav-mobile" class="sidenav">
+		 <ul id="nav-mobile" class="sidenav sidenav-darken">
 			 <li>
 				<div class="user-view">
 					<div class="background">
-					  <img src="/images/office.jpg">
+					  <img src="/images/sidepic.jpg">
 					</div>
 					<a href="#user"><i class="medium material-icons"></i></a>
 					<a href="#name">
@@ -87,46 +87,36 @@
 					</a>
 				</div>
 			 </li>
-			 <li><a class="subheader">RingBloom</a></li>
-			 <li><a class="waves-effect" href="/"><i class="material-icons">home</i>홈</a></li>
+			 <li><a class="subheader darkmode-text">RingBloom</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/"><i class="material-icons icon-darken">home</i>홈</a></li>
  			 <span th:if="${login eq 'login'}">
-			 	<li><a class="waves-effect" href="/board"><i class="material-icons">forum</i>게시판</a></li>
+			 	<li><a class="waves-effect sidenav-text" href="/board"><i class="material-icons icon-darken">forum</i>게시판</a></li>
 			 </span>
 	         <li>
-	             <div class="divider"></div>
+	             <div class="divider divider-darken"></div>
 	         </li>
-	         <li><a class="subheader">User</a></li>
+	         <li><a class="subheader darkmode-text">User</a></li>
 			 <span th:if="${login eq 'login'}">
-				 <li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-			     <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+				 <li><a class="waves-effect sidenav-text" href="/user/logout" id="logoutBtn"><i class="material-icons icon-darken">exit_to_app</i>로그아웃</a></li>
+			     <li><a class="waves-effect sidenav-text" href="/user/account"><i class="material-icons icon-darken">settings</i>내 계정</a></li>
 		     </span>
 			 <span th:unless="${login eq 'login'}">
-			     <li><a class="waves-effect" href="/user/signup" ><i class="material-icons">library_add</i>회원가입</a></li>
-			     <li><a class="waves-effect" href="/user/login"><i class="material-icons">vpn_key</i>로그인</a></li>
+			     <li><a class="waves-effect sidenav-text" href="/user/signup" ><i class="material-icons icon-darken">library_add</i>회원가입</a></li>
+			     <li><a class="waves-effect sidenav-text" href="/user/login"><i class="material-icons icon-darken">vpn_key</i>로그인</a></li>
 			 </span>
 		</ul>
 	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 	  </div>
 	</nav>
 	
-	<div id="index-banner" class="parallax-container">
-	  <div class="section no-pad-bot">
-	    <div class="container">
-	      <br><br>
-	      <h1 class="header center teal-text text-lighten-2">Parallax Template</h1>
-	      <div class="row center">
-	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
-	      </div>
-	      <div class="row center">
-	        <a href="/board" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
-	      </div>
-	      <br><br>
-	
-	    </div>
-	  </div>
+	<!--    CONTENT START    -->
+	<div id="index-banner" class="parallax-container valign-wrapper">
+      <div id="left_side" class="text-center white-text" style="width:100%;">
+          <h1 class="white-text sd" style="text-align: center;">RingBloom</h1>
+          <p class="left-align light" style="text-align: center;">Within this rising passion is a wildly dancing soul</p>
+      </div>
 	  <div class="parallax"><img src="images/background1.jpg" alt="Unsplashed background img 1"></div>
 	</div>
-	
 	
 	<div class="container">
 	  <div class="section">
@@ -157,12 +147,11 @@
 	  </div>
 	</div>
 	
-	
 	<div class="parallax-container valign-wrapper">
 	  <div class="section no-pad-bot">
 	    <div class="container">
 	      <div class="row center">
-	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+	        <h5 class="header col s12 light">This focused and unhesitating true intention guides us</h5>
 	      </div>
 	    </div>
 	  </div>
@@ -174,31 +163,31 @@
 	    <div class="row">
 	      <div class="col s12 center">
 	        <h3><i class="mdi-content-send brown-text"></i></h3>
-	        <h4>Contact Us</h4>
-	        <p class="left-align light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam scelerisque id nunc nec volutpat. Etiam pellentesque tristique arcu, non consequat magna fermentum ac. Cras ut ultricies eros. Maecenas eros justo, ullamcorper a sapien id, viverra ultrices eros. Morbi sem neque, posuere et pretium eget, bibendum sollicitudin lacus. Aliquam eleifend sollicitudin diam, eu mattis nisl maximus sed. Nulla imperdiet semper molestie. Morbi massa odio, condimentum sed ipsum ac, gravida ultrices erat. Nullam eget dignissim mauris, non tristique erat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;</p>
+	        <h4>Inside</h4>
+	        <p class="left-align light">What moved me was this place where I belonged to Towards the sky that cleared up little by little Even the things I ran from I feel like I can face them now The emotions that make my tear glands tremble We play it in this sincere serenade Towards a desired outcome, I extend both hands  
+Heart to Heart Within this rising passion is a wildly dancing soul When everyone’s voice becomes my voice Let’s embrace this one and only feeling in the world Heart to Heart This focused and unhesitating true intention guides us It’s multicolored song that seems to have awakened Along this moment that’s filled with love This destiny that we overcame Will light the path to the future</p>
 	      </div>
 	    </div>
 	  </div>
 	</div>
 	
-	
 	<div class="parallax-container valign-wrapper">
 	  <div class="section no-pad-bot">
 	    <div class="container">
 	      <div class="row center">
-	        <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+	        <h5 class="header col s12 light">I won’t let go of this one and only dream in the world</h5>
 	      </div>
 	    </div>
 	  </div>
 	  <div class="parallax"><img src="images/background3.jpg" alt="Unsplashed background img 3"></div>
 	</div>
 	
-	<footer class="page-footer teal">
+	<footer class="page-footer footer-darken">
 	  <div class="container">
 	    <div class="row">
 	      <div class="col l6 s12">
 	        <h5 class="white-text">Company Bio</h5>
-	        <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+	        <p class="grey-text text-lighten-4">I am a college student working on this project like it's my full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
 	      </div>
 	      <div class="col l3 s12">
 	        <h5 class="white-text">Settings</h5>
@@ -222,11 +211,12 @@
 	  </div>
 	  <div class="footer-copyright">
 	    <div class="container">
-	    	Made by <a class="brown-text text-lighten-3" href="">Rena Makise</a>
+	    	Made by <a class="brown-text text-lighten-3" href="https://github.com/Rena-Makise">Rena Makise</a>
 	    </div>
 	  </div>
 	</footer>
-	
+   <!--    CONTENT END    -->
+   <!--    JS CODE    -->
   <script type="text/javascript">
 	  $(document).ready(function() {
 	      $('.parallax').parallax();

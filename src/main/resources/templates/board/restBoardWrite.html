@@ -36,24 +36,24 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/icons/favicon-96x96.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <meta name="msapplication-TileColor" content="#181818">
+  <meta name="msapplication-TileColor" content="#3344AA">
   <meta name="msapplication-TileImage" content="/icons/ms-icon-144x144.png">
-  <meta name="theme-color" content="#181818">
+  <meta name="theme-color" content="#3344AA">
   <script src="/pwabuilder-sw-register.js"></script>
 </head>
-<body>
+<body class="darkmode">
 	<!-- Dropdown Structure -->
-	<ul id="dropdown1" class="dropdown-content">
-		<li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-	    <li class="divider"></li>
-	    <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	<ul id="dropdown1" class="dropdown-content dropdown-darken z-depth-3">
+		<li><a class="waves-effect darkmode-text" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
+	    <li class="divider divider-darken"></li>
+	    <li><a class="waves-effect darkmode-text" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
 	</ul>
     <!--   NAVIGATION BAR     -->
-	<nav class="white" role="navigation">
+	<nav class="nav-darken" role="navigation">
 	  <div class="nav-wrapper container">
 	    <a id="logo-container" href="/" class="brand-logo">RingBloom</a>
 	    <ul class="right hide-on-med-and-down">
-	      <li><a href="/board">게시판</a></li>
+      	  <li><a href="/board">게시판</a></li>
           <li>
 	          <a class="dropdown-trigger" href="javascript:void(0);" data-target="dropdown1">
 	              <span th:text="${nickname}">
@@ -63,11 +63,11 @@
           </li>
 	    </ul>
 	
-		 <ul id="nav-mobile" class="sidenav">
+		 <ul id="nav-mobile" class="sidenav sidenav-darken">
 			 <li>
 				<div class="user-view">
 					<div class="background">
-					  <img src="/images/office.jpg">
+					  <img src="/images/sidepic.jpg">
 					</div>
 					<a href="#user"><i class="medium material-icons"></i></a>
 					<a href="#name">
@@ -79,20 +79,20 @@
 					</a>
 				</div>
 			 </li>
-			 <li><a class="subheader">RingBloom</a></li>
-			 <li><a class="waves-effect" href="/"><i class="material-icons">home</i>홈</a></li>
-		 	<li><a class="waves-effect" href="/board"><i class="material-icons">forum</i>게시판</a></li>
+			 <li><a class="subheader darkmode-text">RingBloom</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/"><i class="material-icons icon-darken">home</i>홈</a></li>
+		 	 <li><a class="waves-effect sidenav-text" href="/board"><i class="material-icons icon-darken">forum</i>게시판</a></li>
 	         <li>
-	             <div class="divider"></div>
+	             <div class="divider divider-darken"></div>
 	         </li>
-	         <li><a class="subheader">User</a></li>
-			 <li><a class="waves-effect" href="/user/logout" id="logoutBtn"><i class="material-icons">exit_to_app</i>로그아웃</a></li>
-		     <li><a class="waves-effect" href="/user/account"><i class="material-icons">settings</i>내 계정</a></li>
+	         <li><a class="subheader darkmode-text">User</a></li>
+			 <li><a class="waves-effect sidenav-text" href="/user/logout" id="logoutBtn"><i class="material-icons icon-darken">exit_to_app</i>로그아웃</a></li>
+		     <li><a class="waves-effect sidenav-text" href="/user/account"><i class="material-icons icon-darken">settings</i>내 계정</a></li>
 		</ul>
 	    <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 	  </div>
 	</nav>
-	
+	<!--    CONTENT START    -->
 	<div class="container">
 	    <h2>게시글 등록</h2>
 	    <!-- 여기 -->
@@ -113,14 +113,12 @@
 			<input type="hidden" id="creatorId" name="creatorId" th:value="${nickname}"> 
 	    </form>
     </div>
-    <footer class="page-footer teal">
+    <footer class="page-footer footer-darken">
       <div class="container">
         <div class="row">
           <div class="col l6 s12">
             <h5 class="white-text">Company Bio</h5>
-            <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
+            <p class="grey-text text-lighten-4">I am a college student working on this project like it's my full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
           </div>
           <div class="col l3 s12">
             <h5 class="white-text">Settings</h5>
@@ -144,10 +142,12 @@
       </div>
       <div class="footer-copyright">
         <div class="container">
-        	Made by <a class="brown-text text-lighten-3" href="">Rena Makise</a>
+        	Made by <a class="brown-text text-lighten-3" href="https://github.com/Rena-Makise">Rena Makise</a>
         </div>
       </div>
     </footer>
+    <!--    CONTENT END    -->
+    <!--    JS CODE    -->
     <script type="text/javascript">
 		// FCM 메시지 설정 코드
 		var messaging = firebase.messaging();

@@ -43,5 +43,25 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void updateToken(String nickname, String token) throws Exception {
 		userMapper.updateToken(nickname, token);		
+	}
+
+	@Override
+	public UserDto checkUserInfo(String nickname) throws Exception {
+		return userMapper.checkUserInfo(nickname);
+	}
+
+	@Override
+	public void updatePassword(String password, String nickname) throws Exception {
+		userMapper.updatePassword(password, nickname);
+	}
+
+	@Override
+	public int checkPostNum(String nickname) throws Exception {
+		return userMapper.checkPostNum(nickname);
+	}
+
+	@Override
+	public int checkCommentNum(String nickname) throws Exception {
+		return userMapper.checkCommentNum(nickname);
 	}	
 }
