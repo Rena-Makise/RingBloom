@@ -108,16 +108,7 @@
         </div>
         <div class="row h-100">
         	<div class="container">
-		    	<div>
-		    		<select name="searchType" id="select_searchType">
-		    			<option id="title" value="TITLE">제목</option>
-		    			<option id="nickname" value="NICKNAME">글쓴이</option>
-		    		</select>
-		    		<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}" onkeyup="enterkey();">
-					<input type="hidden" id="searchTypeHidden" name="searchTypeHidden" th:value="${searchType}">
-		    		<a href="javascript:fn_searchList()" class="btn">검색</a> 
-		    	</div>
-		    	<table class="board_list">
+		    	<table class="board_list" style="margin-top: 45px;">
 			        <colgroup>
 			            <col width="15%"/>
 			            <col width="*"/>
@@ -138,16 +129,19 @@
 			        	<tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
 			        		<td th:text="${list.boardIdx}"></td>
 			        		<!-- 여기 -->
-			        		<td class="title"><a href="/board/" th:attrappend="href=${paging.curPage} + '/' + ${list.boardIdx} + '?searchType=' + ${searchType} + '&searchWord=' + ${searchWord}" th:text="${list.title}"></a><span th:text="'   [' + ${list.commentCnt} +']'"></span><span th:if="${list.fileCnt != 0}">&nbsp;&nbsp;&nbsp;&nbsp;<i class="material-icons" style="font-size: 15px;">attach_file</i></span></td>
+			        		<td class="title"><a href="/board/" th:attrappend="href=${paging.curPage} + '/' + ${list.boardIdx} + '?searchType=' + ${searchType} + '&searchWord=' + ${searchWord}" th:text="${list.title}"></a><span th:text="'   [' + ${list.commentCnt} +']'"></span><span th:if="${list.fileCnt != 0}">&nbsp;&nbsp;<i class="material-icons" style="font-size: 15px;">attach_file</i></span></td>
 			        		<td th:text="${list.hitCnt}"></td>
 			        		<td th:text="${list.creatorId}"></td>
 			        		<td th:text="${#temporals.format(list.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
 			        	</tr> 
-			        	<tr th:unless="${#lists.size(list)} > 0"
+			        	<tr th:unless="${#lists.size(list)} > 0">
 			        		<td colspan="4">조회된 결과가 없습니다.</td>
 			        	</tr>
 			        </tbody>
 			    </table>
+			    <div style="margin-top: 20px; margin-bottom: 10px;">
+			    	<a href="/board/write" class="btn waves-effect waves-light navyblue">글 쓰기</a>
+			    </div>
 			    <div style="text-align: center;">
 			    	<ul class="pagination" th:with="start=${paging.pageBegin}, end=${paging.pageEnd}">
 			    		<li th:class="${paging.curPage == 1} ? 'disabled' : 'waves-effect'">
@@ -167,8 +161,22 @@
 			    		</li>
 			    	</ul>
 			    </div>
-			    <!-- 여기 -->
-			    <a href="/board/write" class="btn">글 쓰기</a>
+			    <div class="input-field" style="text-align: center;">
+		    		<div class="md-input-container" style="max-width: 56px">
+			    		<select name="searchType" id="select_searchType">
+			    			<option id="title" value="TITLE" style="color:#E2E2E2">제목</option>
+			    			<option id="nickname" value="NICKNAME">글쓴이</option>
+			    		</select>
+		    		</div>
+		    		<div class="md-input-container">
+		    			<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}" onkeyup="enterkey();">
+		    		</div>
+		    		<div class="md-input-container" style="margin-top: 20px;">
+		    			<a href="javascript:fn_searchList()"><i class="material-icons icon-darken">search</i></a>
+		    		</div>
+					<input type="hidden" id="searchTypeHidden" name="searchTypeHidden" th:value="${searchType}">
+		    		<!-- <a href="javascript:fn_searchList()" class="btn waves-effect waves-light navyblue">검색</a> -->
+		    	</div>
 		    </div>
 	    </div>
     </div>

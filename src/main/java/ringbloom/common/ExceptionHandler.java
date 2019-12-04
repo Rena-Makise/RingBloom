@@ -25,6 +25,16 @@ public class ExceptionHandler {
 		ModelAndView mv = new ModelAndView("/error/error_default");
 		mv.addObject("exception", exception);
 		
+		if (request.getSession().getAttribute("nickname") != null) {
+			mv.addObject("nickname", request.getSession().getAttribute("nickname"));
+			mv.addObject("login", "login");
+			mv.addObject("email", request.getSession().getAttribute("email"));
+		} else {
+			mv.addObject("nickname", "Guest");
+			mv.addObject("login", "need");
+			mv.addObject("email", "");
+		}
+		
 		log.error("exception", exception);
 		
 		return mv;

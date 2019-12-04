@@ -118,8 +118,9 @@
 		    <p>
 		        <b>에러가 발생했습니다.</b>
 		        <br/>다음 에러 사항을 관리자에게 알려주세요.
-		        <p th:text="${exception}"></p>
-		        <ul th:each="list : ${exception.getStackTrace()}" th:text="${list.toString()}"></ul>
+		        <br/>에러 코드 : <span th:text="${code}"></span>
+		        <br/>에러 메시지 : <span th:text="${msg}"></span>
+		        <br/>에러 시간 : <span th:text="${timestamp}"></span>
 		    </p>
 		</div>
 		<div class="col m2"></div>

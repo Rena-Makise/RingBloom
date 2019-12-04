@@ -93,94 +93,104 @@
 	  </div>
 	</nav>
 	<!--    CONTENT START    -->
-	<div class="container">
-		<h2>게시글 상세 화면</h2>
-	    <form id="frm" method="post">
-	    	<table class="board_detail">
-				<colgroup>
-					<col width="15%"/>
-					<col width="35%"/>
-					<col width="15%"/>
-					<col width="35%"/>
-				</colgroup>
-				<caption>게시글 상세내용</caption>
-				<tbody>
-					<tr>
-						<th scope="row">글 번호</th>
-						<td th:text="${board.boardIdx}"></td>
-						<th scope="row">조회수</th>
-						<td th:text="${board.hitCnt}"></td>
-					</tr>
-					<tr>
-						<th scope="row">작성자</th>
-						<td th:text="${board.creatorId}"></td>
-						<th scope="row">작성일</th>
-						<td th:text="${#temporals.format(board.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
-					</tr>
-					<tr>
-						<th scope="row">제목</th>
-						<td colspan="3"><input type="text" id="title" name="title" th:value="${board.title}"/></td>
-					</tr>
-					<tr>
-						<td colspan="4" class="view_text">
-							<textarea title="내용" id="contents" name="contents" th:text="${board.contents}" disabled></textarea>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<input type="hidden" id="curPage" name="curPage" th:value="${curPage}">
-			<input type="hidden" id="searchType" name="searchType" th:value="${searchType}">
-			<input type="hidden" id="searchWord" name="searchWord" th:value="${searchWord}">
-			<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
-			<input type="hidden" id="nickname" name="nickname" th:value="${nickname}"> 
-			<!-- 여기 -->
-			<input type="hidden" id="method" name="_method"/>
-		</form>
-		
-		<div class="file_list">
-			<!-- 여기 -->
-			<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
-		</div>
-		
-		<a href="#this" id="list" class="btn">목록으로</a>
-		<span th:if="${board.creatorId eq nickname}">
-			<a href="#this" id="edit" class="btn">수정하기</a>
-			<a href="#this" id="delete" class="btn">삭제하기</a>
-		</span>
-		<table class="board_view" id="comment_table">
-			<colgroup>
-				<col width="10%">
-				<col width="15%">
-				<col width="45%">
-				<col width="20%">
-				<col width="5%">
-			</colgroup>
-			<thead>
-				<tr>
-					<th>reply_idx</th>
-					<th>user_id</th>
-					<th>content</th>
-					<th>created_time</th>
-					<th>delete</th>
-				</tr>
-			</thead>
-			<tbody id="reply_list">
-			
-			</tbody>
-		</table>
-		<br/>
-	    <div style="text-align: center;">
-	    	<ul id="pagination" class="pagination">
-	    	</ul>
-	    </div>
-		<div style="width: 660px;">
-			<p>
-				<textarea rows="10" cols="90" name="comment" id="comment" onkeyup="enterkey();"></textarea>
-			</p>
-			<p style="text-align: right;">
-				<a href="#" class="btn" id="comment_btn">등록</a>
-			</p>
-		</div>
+	<div id="index_01" class="row h-100">
+        <div class="ac-banner white-text col-12">
+            <div class="row sub-banner">
+                <div class="container">
+                    <div class="col s12 m6 acinfo">
+                        <h4 class="userinfo"><b>게시글</b></h4>
+                        <p class="userinfo subinfo" th:text="|${commentCount}개의 댓글이 있습니다.|"></p>
+                    </div>
+                    <div class="col s12 m6 sbinfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row h-100">
+			<div class="container">
+			    <form id="frm" method="post">
+			    	<table class="board_detail" style="margin-top: 45px;">
+						<colgroup>
+							<col width="15%"/>
+							<col width="35%"/>
+							<col width="15%"/>
+							<col width="35%"/>
+						</colgroup>
+						<tbody>
+							<tr>
+								<th scope="row">글 번호</th>
+								<td th:text="${board.boardIdx}"></td>
+								<th scope="row">조회수</th>
+								<td th:text="${board.hitCnt}"></td>
+							</tr>
+							<tr>
+								<th scope="row">작성자</th>
+								<td th:text="${board.creatorId}"></td>
+								<th scope="row">작성일</th>
+								<td th:text="${#temporals.format(board.createdDatetime, 'yy.MM.dd HH:mm')}"></td>
+							</tr>
+							<tr>
+								<th scope="row">제목</th>
+								<td colspan="3" th:text="${board.title}"></td>
+							</tr>
+							<tr>
+								<td colspan="4" class="view_text">
+									<p th:text="${board.contents}"></p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<input type="hidden" id="curPage" name="curPage" th:value="${curPage}">
+					<input type="hidden" id="searchType" name="searchType" th:value="${searchType}">
+					<input type="hidden" id="searchWord" name="searchWord" th:value="${searchWord}">
+					<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
+					<input type="hidden" id="nickname" name="nickname" th:value="${nickname}"> 
+					<!-- 여기 -->
+					<input type="hidden" id="method" name="_method"/>
+				</form>
+				
+				<div class="file_list">
+					<!-- 여기 -->
+					<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+				</div>
+				<div style="margin-top: 20px; margin-bottom: 45px;">
+					<a href="#this" id="list" class="btn waves-effect waves-light navyblue">목록으로</a>
+					<span th:if="${board.creatorId eq nickname}">
+						<a href="#this" id="edit" class="btn waves-effect waves-light navyblue">수정하기</a>
+						<a href="#this" id="delete" class="btn waves-effect waves-light navyblue">삭제하기</a>
+					</span>
+				</div>
+				<p style="font-size: 20px;"><b>댓글</b></p>
+				<table class="board_view" id="comment_table">
+					<colgroup>
+						<col width="15%">
+						<col width="55%">
+						<col width="20%">
+						<col width="5%">
+					</colgroup>
+					<thead>
+					</thead>
+					<tbody id="reply_list">
+					
+					</tbody>
+				</table>
+				<br/>
+			    <div style="text-align: center; margin-bottom: 35px;">
+			    	<ul id="pagination" class="pagination">
+			    	</ul>
+			    </div>
+				<div class="comment_wrapper" style="margin-bottom: 100px;">
+					<textarea name="comment" id="comment" class="comment_area" onkeyup="enterkey();"></textarea>
+					<a href="#" class="comment_but waves-effect waves-light navyblue" id="comment_btn">
+						<div class="comment_but_text_wrapper">
+							<div class="comment_but_text">
+								등록
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+        </div>
 	</div>
     <footer class="page-footer footer-darken">
       <div class="container">
@@ -336,12 +346,11 @@
 					
 					$(result.list).each(function(i) {
 						var str = "<tr>"
-							+ "<td>" + result.list[i].replyIdx + "</td>"
-							+ "<td>" + result.list[i].creatorId + "</td>"
+							+ "<td><b>" + result.list[i].creatorId + "</b></td>"
 							+ "<td>" + result.list[i].contents + "</td>"
 							+ "<td>" + result.list[i].createdDatetime + "</td>"
 							+ "<td>"
-							+ ($("#nickname").val() == result.list[i].creatorId ? " <a href='javascript:fn_commentDelete(" + result.list[i].replyIdx + ")' class='waves-effect btn-flat'><i class='material-icons'>delete</i></a>" : "")
+							+ ($("#nickname").val() == result.list[i].creatorId ? " <a href='javascript:fn_commentDelete(" + result.list[i].replyIdx + ")' class='waves-effect btn-flat'><i class='material-icons' style='color: #E2E2E2;'>delete</i></a>" : "")
 							+ "</td>"
 							+ "</tr>";
 						$("#reply_list").append(str);

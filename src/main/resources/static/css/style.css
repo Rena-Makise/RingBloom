@@ -1,5 +1,6 @@
 @CHARSET "UTF-8";
 
+/* 기본 머테리얼라이즈 css 수정 */
 nav ul a,
 nav .brand-logo {
   color: #E2E2E2;
@@ -19,7 +20,6 @@ div.row{
   color: #0078D7 !important;
 }
 
-
 /* label underline focus color */
 .input-field input[type=text]:focus {
   border-bottom: 1px solid #0078D7 !important;
@@ -32,6 +32,13 @@ div.row{
   color: #0078D7 !important;
 }
 
+.input-field textarea.materialize-textarea:focus {
+  border-bottom: 1px solid #0078D7 !important;
+}
+
+.input-field textarea.materialize-textarea:focus + label {
+  color: #0078D7 !important;
+}
 
 /* label underline focus color */
 .input-field input[type=password]:focus {
@@ -39,6 +46,32 @@ div.row{
   box-shadow: 0 1px 0 0 #0078D7 !important;
 }
 
+.dropdown-content {
+	background-color: #2D2D2D;
+}
+.dropdown-content li > a, .dropdown-content li > span {
+	color: #E2E2E2;
+}
+
+.pagination li a {
+	color: #999;
+}
+
+.pagination li.disabled a {
+	color: #444;
+}
+
+.pagination li.active {
+	background-color : #0063B1;
+}
+
+.md-input-container {
+    display: inline-block;
+    position: relative;
+    padding: 2px;
+    margin: 18px 0;
+    vertical-align: middle;
+}
 
 /* 기본 컨텐츠 본문 */
 #index_01 {
@@ -52,6 +85,52 @@ div.row{
     bottom:0;
     display: absolute !important;
     min-height: 105vh !important;
+}
+
+.comment_wrapper {
+    position: relative;
+    padding-right: 85px;
+}
+
+.comment_area {
+    height: 77px;
+    overflow: hidden;
+    overflow-y: scroll;
+    width: 100%;
+    vertical-align: top;
+    padding: 0;
+    resize: vertical;
+    background: none;
+    color: #333;
+}
+
+.comment_but {
+    height: 100%;
+    width: 85px;
+    position: absolute;
+    top: -1px;
+    right: 0;
+    border: 0;
+    background-color: #1A70DC;
+    color: #fff;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.comment_but_text_wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: table;
+}
+
+.comment_but_text {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 /* 하단 card관련 css */

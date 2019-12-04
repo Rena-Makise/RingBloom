@@ -113,6 +113,7 @@ public class RestBoardController {
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
 		ModelAndView mv = new ModelAndView("/board/restBoardDetail");
+		int commetCount = boardService.commentListGetCount(boardIdx);
 		
 		BoardDto board = boardService.selectBoardDetail(boardIdx);
 		mv.addObject("curPage", curPage);
@@ -121,6 +122,7 @@ public class RestBoardController {
 		mv.addObject("searchWord", searchWord);
 		mv.addObject("nickname", request.getSession().getAttribute("nickname"));
 		mv.addObject("email", request.getSession().getAttribute("email"));
+		mv.addObject("commentCount", commetCount);
 		
 		return mv;
 	}
@@ -133,6 +135,7 @@ public class RestBoardController {
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
 		ModelAndView mv = new ModelAndView("/board/restBoardEdit");
+		int commentCount = boardService.commentListGetCount(boardIdx);
 		
 		BoardDto board = boardService.selectBoardDetail(boardIdx);
 		if(!request.getSession().getAttribute("nickname").toString().equals(board.getCreatorId()) ) {
@@ -147,8 +150,7 @@ public class RestBoardController {
 		mv.addObject("searchWord", searchWord);
 		mv.addObject("nickname", request.getSession().getAttribute("nickname"));
 		mv.addObject("email", request.getSession().getAttribute("email"));
-		
-		log.debug("뭐야 시발 : " + boardIdx);
+		mv.addObject("commentCount", commentCount);
 		
 		return mv;
 	}
