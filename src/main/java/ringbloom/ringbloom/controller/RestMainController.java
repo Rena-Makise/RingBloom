@@ -24,7 +24,7 @@ public class RestMainController {
 	@ApiOperation(value = "RingBloom 메인화면")
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView openMain(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("/index");
+		ModelAndView mv = new ModelAndView("index");
 		if (request.getSession().getAttribute("nickname") != null) {
 			mv.addObject("nickname", request.getSession().getAttribute("nickname"));
 			mv.addObject("login", "login");

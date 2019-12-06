@@ -8,6 +8,7 @@
  */
 package ringbloom.ringbloom.service;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,12 +54,12 @@ public class BoardServiceImpl implements BoardService {
 	
 	// 게시글 등록
 	@Override
-	public void insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+	public void insertBoard(BoardDto board, String nickname, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
 		boardMapper.insertBoard(board);
-		List<BoardFileDto> list = fileUtils.parseFileInfo(board.getBoardIdx(), multipartHttpServletRequest);
+		List<BoardFileDto> list = fileUtils.parseFileInfo(board.getBoardIdx(), nickname, multipartHttpServletRequest);
 		if(CollectionUtils.isEmpty(list) == false) {
 			boardMapper.insertBoardFileList(list);
-		}
+		}	
 	}
 
 	// 게시글 상세 화면 출력
@@ -68,9 +69,13 @@ public class BoardServiceImpl implements BoardService {
 		List<BoardFileDto> fileList = boardMapper.selectBoardFileList(boardIdx);
 		board.setFileList(fileList);
 		
-		boardMapper.updateHitCount(boardIdx);  // 게시글 조회수 증가
-		
 		return board;
+	}
+	
+	// 게시글 조회수 증가
+	@Override
+	public void addHitCount(int boardIdx) throws Exception {
+		boardMapper.updateHitCount(boardIdx);
 	}
 
 	// 게시글 수정
@@ -89,6 +94,15 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardFileDto selectBoardFileInformation(int idx, int boardIdx) throws Exception {
 		return boardMapper.selectBoardFileInformation(idx, boardIdx);
+	}
+	
+	// 첨부파일 업로드
+	@Override
+	public void fileUpload(BoardDto board, String nickname, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+		List<BoardFileDto> list = fileUtils.parseFileInfo(board.getBoardIdx(), nickname, multipartHttpServletRequest);
+		if(CollectionUtils.isEmpty(list) == false) {
+			boardMapper.insertBoardFileList(list);
+		}	
 	}
 
 	// 댓글 목록 보기

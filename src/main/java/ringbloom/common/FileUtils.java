@@ -20,7 +20,7 @@ import ringbloom.ringbloom.dto.BoardFileDto;
 
 @Component
 public class FileUtils {
-	public List<BoardFileDto> parseFileInfo(int boardIdx, MultipartHttpServletRequest multipartHttpServeltReqeust) throws Exception {
+	public List<BoardFileDto> parseFileInfo(int boardIdx, String creatorId, MultipartHttpServletRequest multipartHttpServeltReqeust) throws Exception {
 		if(ObjectUtils.isEmpty(multipartHttpServeltReqeust)) {
 			return null;
 		}
@@ -67,6 +67,7 @@ public class FileUtils {
 					boardFile.setFileSize(multipartFile.getSize());
 					boardFile.setOriginalFileName(multipartFile.getOriginalFilename());
 					boardFile.setStoredFilePath(path + "/" + newFileName);
+					boardFile.setCreatorId(creatorId);
 					fileList.add(boardFile);
 					
 					file = new File(path + "/" + newFileName);

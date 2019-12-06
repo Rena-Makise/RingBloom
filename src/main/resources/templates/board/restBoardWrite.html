@@ -93,26 +93,42 @@
 	  </div>
 	</nav>
 	<!--    CONTENT START    -->
-	<div class="container">
-	    <h2>게시글 등록</h2>
-	    <!-- 여기 -->
-	    <form id="frm" name="frm" method="post" action="/board/write" enctype="multipart/form-data">
-	    	<table class="board_detail">
-	    		<tr>
-	    			<td>제목</td>
-	    			<td><input type="text" id="title" name="title"/></td>
-	    		</tr>
-	    		<tr>
-	    			<td colspan="2">
-		    			<textarea id="contents" name="contents"></textarea>
-	    			</td>
-	    		</tr>
-	    	</table>
-	    	<input type="file" id="files" name="files" multiple="multiple">
-	    	<input type="submit" id="submit" value="저장" class="btn">
-			<input type="hidden" id="creatorId" name="creatorId" th:value="${nickname}"> 
-	    </form>
-    </div>
+	<div id="index_01" class="row h-100">
+        <div class="ac-banner white-text col-12">
+            <div class="row sub-banner">
+                <div class="container">
+                    <div class="col s12 m6 acinfo">
+                        <h4 class="userinfo"><b>게시글 등록</b></h4>
+                    </div>
+                    <div class="col s12 m6 sbinfo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row h-100">
+			<div class="container">
+			    <form id="frm" name="frm" method="post" action="/board/write" enctype="multipart/form-data">
+			    	<table class="board_detail" style="margin-top: 45px;">
+						<tr>
+							<th scope="row">제목</th>
+							<td colspan="1" class="input-field"><input type="text" id="title" name="title"/></td>
+						</tr>
+						<tr>
+							<td colspan="4" class="view_text">
+								<div class="input-field">
+									<textarea title="내용" id="contents" name="contents" class="materialize-textarea"></textarea>
+									<label for="contents">게시글 내용</label>
+								</div>
+							</td>
+						</tr>
+			    	</table>
+			    	<input type="file" id="files" name="files" multiple="multiple">
+			    	<input type="submit" id="submit" value="저장" class="btn waves-effect waves-light navyblue">
+					<input type="hidden" id="creatorId" name="creatorId" th:value="${nickname}"> 
+			    </form>
+		    </div>
+        </div>
+	</div>
     <footer class="page-footer footer-darken">
       <div class="container">
         <div class="row">
@@ -149,6 +165,37 @@
     <!--    CONTENT END    -->
     <!--    JS CODE    -->
     <script type="text/javascript">
+		$(document).ready(function(){
+			$('#contents').val();
+		    M.textareaAutoResize($('#contents'));
+		});
+		
+		$('input#files').change(function(){
+			  var imageSizeArr = 0;
+			  var imageArr = document.getElementById('files');
+			  var imageCount = imageArr.files.length;
+			  var imageToBig = false;
+			  for (var i = 0; i < imageArr.files.length; i++){
+			     var imageSize = imageArr.files[i].size;
+			     var imageName = imageArr.files[i].name;
+			     if (imageSize > 5 * 1024 * 1024){
+			         var imageSizeArr = 1;
+			     }
+			     if (imageSizeArr == 1){
+			         console.log(imageName+': file too big\n');
+			         imageToBig = true;
+			     }
+			     else if (imageSizeArr == 0){
+			         console.log(imageName+': file ok\n');
+			     }
+			  }
+			  if(imageToBig){
+			    //give an alert that at least one image is to big
+			    window.alert("하나 이상의 파일이 너무 큽니다.\n다시 선택해 주세요!");
+			    $('input#files').val("");
+			    }
+			});  
+		
 		// FCM 메시지 설정 코드
 		var messaging = firebase.messaging();
 		messaging.requestPermission()

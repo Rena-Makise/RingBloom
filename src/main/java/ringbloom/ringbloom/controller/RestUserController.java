@@ -37,7 +37,7 @@ public class RestUserController {
 	@ApiOperation(value = "회원가입 화면")
 	@RequestMapping(value = "/user/signup", method = RequestMethod.GET)
 	public ModelAndView openSignUp(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		ModelAndView mv = new ModelAndView("/user/signUp");
+		ModelAndView mv = new ModelAndView("user/signUp");
 		mv.addObject("nickname", "Guest");
 		mv.addObject("email", "");
 		return mv;
@@ -75,7 +75,7 @@ public class RestUserController {
 	@ApiOperation(value = "로그인 화면")
 	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
 	public ModelAndView openLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("/user/login");
+		ModelAndView mv = new ModelAndView("user/login");
 		mv.addObject("nickname", "Guest");
 		mv.addObject("email", "");
 		return mv;
@@ -139,13 +139,13 @@ public class RestUserController {
 	@ApiOperation(value = "접근거부 화면")
 	@RequestMapping(value = "/user/denied", method = RequestMethod.GET)
 	public String openDenied() throws Exception {
-		return "/user/denied";
+		return "user/denied";
 	}
 	
 	@ApiOperation(value = "유저정보 화면")
 	@RequestMapping(value = "/user/account", method = RequestMethod.GET)
 	public ModelAndView openUserInfo(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("/user/userInfo");
+		ModelAndView mv = new ModelAndView("user/userInfo");
 		String nickname = request.getSession().getAttribute("nickname").toString();
 		mv.addObject("pid", request.getSession().getAttribute("pid"));
 		mv.addObject("nickname", request.getSession().getAttribute("nickname"));
@@ -158,13 +158,13 @@ public class RestUserController {
 	@ApiOperation(value = "관리자 화면")
 	@RequestMapping(value = "/user/admin", method = RequestMethod.GET)
 	public String openAdmin() throws Exception {
-		return "/user/admin";
+		return "user/admin";
 	}
 	
 	@ApiOperation(value = "패스워드 재설정 화면")
 	@RequestMapping(value = "/user/pwReset", method = RequestMethod.GET)
 	public ModelAndView openPwReset(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("/user/pwReset");
+		ModelAndView mv = new ModelAndView("user/pwReset");
 		if (request.getSession().getAttribute("nickname") != null) {
 			mv.addObject("nickname", request.getSession().getAttribute("nickname"));
 			mv.addObject("login", "login");

@@ -25,4 +25,7 @@ public class BoardFileDto {
 	
 	@ApiModelProperty(value = "첨부파일 사이즈")
 	private long fileSize;
+	
+	@ApiModelProperty(value = "업로더")
+	private String creatorId;
 }

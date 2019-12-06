@@ -144,6 +144,7 @@
 					<input type="hidden" id="searchType" name="searchType" th:value="${searchType}">
 					<input type="hidden" id="searchWord" name="searchWord" th:value="${searchWord}">
 					<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
+					<input type="hidden" id="title" name="title" th:value="${board.title}"> 
 					<input type="hidden" id="nickname" name="nickname" th:value="${nickname}"> 
 					<!-- 여기 -->
 					<input type="hidden" id="method" name="_method"/>
@@ -151,7 +152,7 @@
 				
 				<div class="file_list">
 					<!-- 여기 -->
-					<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+					<span th:if="${board.fileList.size() != 0}">첨부파일 : </span><a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName}(${list.fileSize} kb)      |"></a>
 				</div>
 				<div style="margin-top: 20px; margin-bottom: 45px;">
 					<a href="#this" id="list" class="btn waves-effect waves-light navyblue">목록으로</a>

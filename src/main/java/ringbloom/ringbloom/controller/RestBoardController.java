@@ -56,7 +56,7 @@ public class RestBoardController {
 			@PathVariable Optional<Integer> curPage,
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
-		ModelAndView mv = new ModelAndView("/board/restBoardList");
+		ModelAndView mv = new ModelAndView("board/restBoardList");
 		
 		// 전체 게시물 레코드의 갯수
 		int count = boardService.boardListGetCount(searchType, searchWord);
@@ -91,7 +91,7 @@ public class RestBoardController {
 	@ApiOperation(value = "게시글 작성 화면")
 	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
 	public ModelAndView openBoardWrite(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ModelAndView mv = new ModelAndView("/board/restBoardWrite");
+		ModelAndView mv = new ModelAndView("board/restBoardWrite");
 		mv.addObject("nickname", request.getSession().getAttribute("nickname"));
 		mv.addObject("email", request.getSession().getAttribute("email"));
 		
@@ -100,8 +100,8 @@ public class RestBoardController {
 	
 	@ApiOperation(value = "게시글 등록")
 	@RequestMapping(value = "/board/write", method = RequestMethod.POST)
-	public String insertBoard(BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
-		boardService.insertBoard(board, multipartHttpServletRequest);
+	public String insertBoard(HttpServletRequest request, BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+		boardService.insertBoard(board, request.getSession().getAttribute("nickname").toString(), multipartHttpServletRequest);
 		return "redirect:/board";
 	}
 	
@@ -112,10 +112,11 @@ public class RestBoardController {
 			@PathVariable("boardIdx") int boardIdx,
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
-		ModelAndView mv = new ModelAndView("/board/restBoardDetail");
+		ModelAndView mv = new ModelAndView("board/restBoardDetail");
 		int commetCount = boardService.commentListGetCount(boardIdx);
 		
 		BoardDto board = boardService.selectBoardDetail(boardIdx);
+		boardService.addHitCount(boardIdx);
 		mv.addObject("curPage", curPage);
 		mv.addObject("board", board);
 		mv.addObject("searchType", searchType);
@@ -134,7 +135,7 @@ public class RestBoardController {
 			@PathVariable("boardIdx") int boardIdx,
 			@RequestParam(value = "searchType", defaultValue = "TITLE") String searchType,
 			@RequestParam(value = "searchWord", defaultValue = "") String searchWord) throws Exception {
-		ModelAndView mv = new ModelAndView("/board/restBoardEdit");
+		ModelAndView mv = new ModelAndView("board/restBoardEdit");
 		int commentCount = boardService.commentListGetCount(boardIdx);
 		
 		BoardDto board = boardService.selectBoardDetail(boardIdx);
@@ -196,6 +197,13 @@ public class RestBoardController {
 		}
 	}
 	
+	@ApiOperation(value = "첨부파일 업로드")
+	@RequestMapping(value = "/board/file/upload", method = RequestMethod.POST)
+	@ResponseBody
+	public void fileUpload(HttpServletRequest request, BoardDto board, MultipartHttpServletRequest multipartHttpServletRequest) throws Exception {
+		boardService.fileUpload(board, request.getSession().getAttribute("nickname").toString(),multipartHttpServletRequest);
+	}
+	
 	@ApiOperation(value = "댓글 목록 보기")
 	@RequestMapping(value = "/board/comment", method = RequestMethod.POST)
 	@ResponseBody
@@ -234,7 +242,7 @@ public class RestBoardController {
 		String creatorToken = boardService.checkToken(boardIdx);
 		log.debug("작성자 토큰 : " + creatorToken);
 		
-		if(creatorToken != null) {
+		if(creatorToken != null && !user_id.equals(request.getSession().getAttribute("nickname").toString())) {
 			log.debug("푸시 알림 전송 시도");
 			FCMService fcmService = new FCMService();
 			String sender = request.getSession().getAttribute("nickname").toString();

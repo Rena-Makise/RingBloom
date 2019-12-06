@@ -46,7 +46,7 @@ public class NotFoundHandler implements ErrorController {
 			model.addAttribute("email", "");
 		}
         
-        return "/error/error_notfound";
+        return "error/error_notfound";
     }
 	
 }

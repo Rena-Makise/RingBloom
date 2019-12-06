@@ -148,16 +148,16 @@
 					<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
 					<!-- 여기 -->
 					<input type="hidden" id="method" name="_method"/>
+					<div class="file_list">
+						<!-- 여기 -->
+						<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
+						<input type="file" id="files" name="files" multiple="multiple">
+					</div>
+					<div style="margin-top: 50px; margin-bottom: 100px;">
+						<a href="#this" id="list" class="btn waves-effect waves-light navyblue">목록으로</a>
+						<a href="#this" id="edit" class="btn waves-effect waves-light navyblue">수정완료</a>
+					</div>
 				</form>
-				
-				<div class="file_list">
-					<!-- 여기 -->
-					<a th:each="list : ${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName} (${list.fileSize} kb)|"></a>
-				</div>
-				<div style="margin-bottom: 100px;">
-					<a href="#this" id="list" class="btn waves-effect waves-light navyblue">목록으로</a>
-					<a href="#this" id="edit" class="btn waves-effect waves-light navyblue">수정완료</a>
-				</div>
 			</div>
         </div>
 	</div>
@@ -210,13 +210,37 @@
 			});
 			
 			$("#edit").on("click", function(){
+				uploadFile();
+				
 				$("#method").val("put");
 				
 				var frm = $("#frm")[0];
+				
 				frm.action = "/board/"+curPage+"/"+boardIdx + "/edit?searchType=" + searchType + "&searchWord=" + searchWord;
 				frm.submit();
 			});
 		});
+		
+		function uploadFile() {
+			var frm = $("#frm")[0];
+			var frmdata = new FormData(frm);
+			$.ajax({
+	             type: "POST",
+	             url: "/board/file/upload",
+	             data: frmdata,
+	             processData: false,
+	             contentType: false,
+				 error : function(request, status, error) {
+					  alert("서버가 응답하지 않습니다." + "\n" + "다시 시도해주시기 바랍니다." + "\n"
+							  + "code: " + request.status + "\n"
+							  + "message: " + request.responseText + "\n"
+							  + "error: " + error);
+				 },
+	             success: function(result){
+	            	 console.log("파일 업로드 성공");	              
+	           	 }
+	        });
+		}
 		
 		// FCM 메시지 설정 코드
 		var messaging = firebase.messaging();
