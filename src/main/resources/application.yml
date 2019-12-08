@@ -1,0 +1,46 @@
+logging:
+  config:
+    classpath: logback-${spring.profiles.active}.xml
+
+spring:
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      allow-pool-suspension: true
+  profiles:
+      active: production
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    
+server:
+  tomcat:
+    use-relative-redirects: true
+    
+---
+spring:
+  profiles: dev
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: jdbc:log4jdbc:mysql://
+      username: 
+      password: 
+  thymeleaf:
+    cache: false
+  resources:
+    cache:
+      period: 0
+      
+---
+spring:
+  profiles: production
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: jdbc:log4jdbc:mysql://
+      username: 
+      password: 
+  
+  
